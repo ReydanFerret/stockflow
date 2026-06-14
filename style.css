@@ -20,6 +20,14 @@ body {
     
 }
 
+h2{
+    text-align: center;
+}
+table{
+    margin: 20px 60px 0px 60px;
+    border-radius: 12px;
+}
+
 @media(max-width: 576px){
     header{
         display: flex;
