@@ -77,6 +77,12 @@ body {
         cursor: pointer;
     }
 
+        main form select{
+        width: 70%;
+        height: 25px;
+        box-sizing: border-box;
+    }
+
     footer{
         display: flex;
         flex-direction: row;
@@ -144,6 +150,12 @@ body {
         padding: 10px;
         font-size: 16px;
         cursor: pointer;
+    }
+
+        main form select{
+        width: 80%;
+        height: 25px;
+        box-sizing: border-box;
     }
 
     footer{
@@ -218,6 +230,12 @@ body {
     button:hover{
         background-color: var(--color-terciario);
         transition: 0.5s;
+    }
+
+        main form select{
+        width: 80%;
+        height: 25px;
+        box-sizing: border-box;
     }
 
     footer{
