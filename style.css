@@ -42,6 +42,7 @@ body {
         display: flex;
         flex-direction: column;
         align-self: center;
+        justify-self: center;
         width: 80%;
         padding: 25px;
         margin-bottom: 20px;
@@ -71,7 +72,6 @@ body {
         display: flex;
         background-color: var(--color-primario);
         border-radius: 10px;
-        justify-content: center;
         padding: 10px;
         font-size: 16px;
         cursor: pointer;
