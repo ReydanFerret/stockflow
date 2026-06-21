@@ -238,3 +238,70 @@ table{
         box-sizing: border-box;
     }
 }
+
+table{
+    width: calc(100% - 120px);
+    margin: 20px 60px;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--color-secundario);
+    color: black;
+}
+
+th{
+    background-color: var(--color-terciario);
+    color: white;
+    padding: 12px;
+    text-align: center;
+}
+
+td{
+    padding: 10px;
+    text-align: center;
+}
+
+th, td{
+    border: 2px solid var(--color-terciario);
+}
+
+tr:nth-child(even){
+    background-color: rgba(255,255,255,0.15);
+}
+
+tr:hover{
+    background-color: rgba(255,255,255,0.25);
+    transition: 0.3s;
+}
+
+/* ===== FORMULARIO PARA AGREGAR PRODUCTOS ===== */
+
+.agregar-producto{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px;
+}
+
+.agregar-producto input{
+    padding: 10px;
+    border: 2px solid var(--color-terciario);
+    border-radius: 8px;
+    font-family: "Roboto Condensed", sans-serif;
+}
+
+.agregar-producto button{
+    padding: 10px 20px;
+    background-color: var(--color-terciario);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: "Roboto Condensed", sans-serif;
+}
+
+.agregar-producto button:hover{
+    background-color: var(--color-secundario);
+    transition: 0.3s;
+}
