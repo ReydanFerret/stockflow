@@ -8,9 +8,10 @@ function agregarProducto() {
     let imagen = document.getElementById("imagen").files[0];
 
     if (producto === "" || precio === "" || stock === "") {
-        alert("Completa todos los campos.");
+        alert("Completa los tres primeros campos.");
         return;
     }
+    let descripcion = document.getElementById("descripcion").value;
 
     let tabla = document.getElementById("tablaProductos");
     let fila = tabla.insertRow();
@@ -19,7 +20,6 @@ function agregarProducto() {
     fila.insertCell(1).innerHTML = producto;
     fila.insertCell(2).innerHTML = "$" + precio;
     fila.insertCell(3).innerHTML = stock;
-
     let celdaImagen = fila.insertCell(4);
 
     if (imagen) {
@@ -28,9 +28,11 @@ function agregarProducto() {
     } else {
         celdaImagen.innerHTML = "Sin imagen";
     }
-
+    fila.insertCell(5).innerHTML = descripcion || "Sin descripción";
+    
     document.getElementById("producto").value = "";
     document.getElementById("precio").value = "";
     document.getElementById("stock").value = "";
     document.getElementById("imagen").value = "";
+    document.getElementById("descripcion").value = "";
 }

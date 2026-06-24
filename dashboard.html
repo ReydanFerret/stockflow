@@ -25,6 +25,7 @@
         <input type="number" id="precio" placeholder="Precio">
         <input type="number" id="stock" placeholder="Stock">
         <input type="file" id="imagen" accept="image/*">
+        <textarea id="descripcion" placeholder="Descripción del producto"></textarea>
         
 
         <button onclick="agregarProducto()">
@@ -39,6 +40,7 @@
             <th>Precio</th>
             <th>Stock</th>
             <th>Imagen</th>
+            <th>Descripción</th>
         </tr>
 
         <tr>
@@ -47,6 +49,7 @@
             <td>$25</td>
             <td>15</td>
             <td><img src="img/mouse_gamer.jpg" alt=""></td>
+            <td>Sin descripción</td>
         </tr>
 
         <tr>
@@ -55,6 +58,7 @@
             <td>$60</td>
             <td>8</td>
             <td>Sin imagen</td>
+            <td>Teclado de 50x20 pulgadas, color negro</td>
         </tr>
 
         <tr>
@@ -63,11 +67,12 @@
             <td>$40</td>
             <td>12</td>
             <td><img src="img/auriculares.jpg" alt=""></td>
+            <td>Auriculares inalámbricos marca JBL. Duración de batería de 4 a 6 horas, carga rápida.</td>
         </tr>
     </table>
 
     <footer>
-        <h2>©2026 Archivement Project</h2>
+        <h3>©2026 Archivement Project</h3>
     </footer>
 
     <script src="JS/dashboard.js"></script>
