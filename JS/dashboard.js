@@ -1,0 +1,36 @@
+       let contador = 4;
+
+function agregarProducto() {
+
+    let producto = document.getElementById("producto").value;
+    let precio = document.getElementById("precio").value;
+    let stock = document.getElementById("stock").value;
+    let imagen = document.getElementById("imagen").files[0];
+
+    if (producto === "" || precio === "" || stock === "") {
+        alert("Completa todos los campos.");
+        return;
+    }
+
+    let tabla = document.getElementById("tablaProductos");
+    let fila = tabla.insertRow();
+
+    fila.insertCell(0).innerHTML = contador++;
+    fila.insertCell(1).innerHTML = producto;
+    fila.insertCell(2).innerHTML = "$" + precio;
+    fila.insertCell(3).innerHTML = stock;
+
+    let celdaImagen = fila.insertCell(4);
+
+    if (imagen) {
+        let url = URL.createObjectURL(imagen);
+        celdaImagen.innerHTML = `<img src="${url}" width="80">`;
+    } else {
+        celdaImagen.innerHTML = "Sin imagen";
+    }
+
+    document.getElementById("producto").value = "";
+    document.getElementById("precio").value = "";
+    document.getElementById("stock").value = "";
+    document.getElementById("imagen").value = "";
+}

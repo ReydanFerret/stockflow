@@ -24,6 +24,8 @@
         <input type="text" id="producto" placeholder="Producto">
         <input type="number" id="precio" placeholder="Precio">
         <input type="number" id="stock" placeholder="Stock">
+        <input type="file" id="imagen" accept="image/*">
+        
 
         <button onclick="agregarProducto()">
             Agregar Producto
@@ -36,6 +38,7 @@
             <th>Producto</th>
             <th>Precio</th>
             <th>Stock</th>
+            <th>Imagen</th>
         </tr>
 
         <tr>
@@ -43,6 +46,7 @@
             <td>Mouse Gamer</td>
             <td>$25</td>
             <td>15</td>
+            <td><img src="img/mouse_gamer.jpg" alt=""></td>
         </tr>
 
         <tr>
@@ -50,6 +54,7 @@
             <td>Teclado Mecánico</td>
             <td>$60</td>
             <td>8</td>
+            <td>Sin imagen</td>
         </tr>
 
         <tr>
@@ -57,6 +62,7 @@
             <td>Auriculares</td>
             <td>$40</td>
             <td>12</td>
+            <td><img src="img/auriculares.jpg" alt=""></td>
         </tr>
     </table>
 
@@ -64,34 +70,6 @@
         <h2>©2026 Archivement Project</h2>
     </footer>
 
-    <script>
-        let contador = 4;
-
-        function agregarProducto() {
-
-            let producto = document.getElementById("producto").value;
-            let precio = document.getElementById("precio").value;
-            let stock = document.getElementById("stock").value;
-
-            if (producto === "" || precio === "" || stock === "") {
-                alert("Completa todos los campos.");
-                return;
-            }
-
-            let tabla = document.getElementById("tablaProductos");
-
-            let fila = tabla.insertRow();
-
-            fila.insertCell(0).innerHTML = contador++;
-            fila.insertCell(1).innerHTML = producto;
-            fila.insertCell(2).innerHTML = "$" + precio;
-            fila.insertCell(3).innerHTML = stock;
-
-            document.getElementById("producto").value = "";
-            document.getElementById("precio").value = "";
-            document.getElementById("stock").value = "";
-        }
-    </script>
-
+    <script src="JS/dashboard.js"></script>
 </body>
 </html>
