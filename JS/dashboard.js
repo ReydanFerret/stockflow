@@ -8,14 +8,17 @@ function agregarProducto() {
     let imagen = document.getElementById("imagen").files[0];
 
     if (producto === "" || precio === "" || stock === "") {
-        alert("Completa los tres primeros campos.");
+        alert("Producto, Precio y Stock no pueden estar vacíos.");
         return;
     }
     let descripcion = document.getElementById("descripcion").value;
 
     let tabla = document.getElementById("tablaProductos");
     let fila = tabla.insertRow();
-
+    if (precio < 0 || stock < 0) {
+    alert("Precio y stock no pueden ser negativos.");
+    return;
+}
     fila.insertCell(0).innerHTML = contador++;
     fila.insertCell(1).innerHTML = producto;
     fila.insertCell(2).innerHTML = "$" + precio;

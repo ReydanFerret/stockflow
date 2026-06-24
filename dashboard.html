@@ -21,13 +21,15 @@
     <h2>Lista de Productos</h2>
 
     <div class="agregar-producto">
-        <input type="text" id="producto" placeholder="Producto">
-        <input type="number" id="precio" placeholder="Precio">
-        <input type="number" id="stock" placeholder="Stock">
+        <input type="text" id="producto" placeholder="Producto"
+        oninput="this.value=this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]/g,'')">
+        <input type="number" id="precio" placeholder="Precio" min="0" inputmode="numeric"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        <input type="number" id="stock" placeholder="Stock" min="0" inputmode="numeric"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         <input type="file" id="imagen" accept="image/*">
         <textarea id="descripcion" placeholder="Descripción del producto"></textarea>
         
-
         <button onclick="agregarProducto()">
             Agregar Producto
         </button>
