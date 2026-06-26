@@ -31,6 +31,54 @@ h2{
     border-radius: 10px;
 }
 
+.buscar_agregar_eliminar{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+    width:90%;
+    margin:0 auto 25px auto;
+}
+
+.buscar_agregar_eliminar input{
+    width: 800px;
+    max-width:100%;
+    margin: 0px 138px 0px 0px;
+    padding:12px;
+    border:2px solid var(--color-terciario);
+    border-radius:8px;
+    font-size:16px;
+    font-family:"Roboto Condensed", sans-serif;
+}
+
+.buscar_agregar_eliminar button{
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    color:white;
+    font-family:"Roboto Condensed", sans-serif;
+    transition:.3s;
+}
+
+#btnEditar{
+    background:#1e88e5;
+}
+
+#btnEditar:hover{
+    background:#1565c0;
+}
+
+#btnEliminar{
+    background:#d32f2f;
+}
+
+#btnEliminar:hover{
+    background:#b71c1c;
+}
+
 .contenedor-tabla{
     overflow-x: auto;
 }
@@ -144,7 +192,7 @@ td {
     flex-direction: column;
     align-items: center;
     width: 95%;
-    margin: 10px auto;
+    margin: 10px 50px;
     }
 
     .agregar-producto input,
@@ -457,4 +505,14 @@ th:nth-child(6),
 td:nth-child(6){
     width: 200px;
     font-size: 20px;
+}
+
+.modo-edicion tr:hover td{
+    background:#b3d9ff;
+    cursor:pointer;
+}
+
+.modo-eliminar tr:hover td{
+    background:#ffb3b3;
+    cursor:pointer;
 }

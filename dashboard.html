@@ -20,6 +20,24 @@
 
     <h2>Lista de Productos</h2>
 
+    <div class="buscar_agregar_eliminar">
+
+    <input
+        type="text"
+        id="buscarProducto"
+        placeholder="Buscar por nombre, precio o stock..."
+        onkeyup="buscarProducto()">
+
+    <button id="btnEditar" onclick="activarModoEditar()">
+        Editar
+    </button>
+
+    <button id="btnEliminar" onclick="activarModoEliminar()">
+        Eliminar
+    </button>
+
+</div>
+
     <div class="agregar-producto">
         <input type="text" id="producto" placeholder="Producto" maxlength="30"
         oninput='this.value=this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ."()]/g,"")' maxlength="35">
@@ -34,7 +52,7 @@
 
         <textarea id="descripcion" placeholder="Descripción del producto" maxlength="300"></textarea>
         
-        <button onclick="agregarProducto()">
+        <button id="btnAgregar" onclick="agregarProducto()">
             Agregar Producto
         </button>
     </div>
@@ -65,7 +83,7 @@
             <td>8</td>
             <td>Sin imagen</td>
             <td>Teclado mecánico de tamaño completo (104 teclas), dimensiones aproximadas 
-            de 44,5 × 14 × 3 cm, color negro, conexión USB, diseño ergonómico, ideal para trabajo, 
+            de 44,5 x 14 x 3 cm, color negro, conexión USB, diseño ergonómico, ideal para trabajo, 
             estudio y videojuegos</td>
         </tr>
 
