@@ -35,14 +35,20 @@ loginForm.addEventListener("submit", function(e) {
     // Redirección según rol
     if (rol === "admin") {
         window.location.href = "dashboard.html";
+        document.getElementById("nombreUsuario").value = "";
+        document.getElementById("contraseñaUsuario").value = "";
     }
 
     if (rol === "vendedor") {
         window.location.href = "dashboard-vendedor.html";
+        document.getElementById("nombreUsuario").value = "";
+        document.getElementById("contraseñaUsuario").value = "";
     }
 
     if (rol === "repositor") {
         window.location.href = "dashboard-repositor.html";
+        document.getElementById("nombreUsuario").value = "";
+        document.getElementById("contraseñaUsuario").value = "";
     }
 
 });
