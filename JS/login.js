@@ -1,5 +1,16 @@
 const loginForm = document.getElementById("loginForm");
 
+function mostrarError(mensaje) {
+    document.getElementById("mensajeError").innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            ${mensaje}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
 loginForm.addEventListener("submit", function(e) {
 
     e.preventDefault();
@@ -10,25 +21,25 @@ loginForm.addEventListener("submit", function(e) {
 
     // Validar cédula
     if (usuario.length !== 8) {
-        alert("La cédula debe tener exactamente 8 dígitos.");
+        mostrarError("La cédula debe tener exactamente 8 dígitos.");
         return;
     }
 
     // Validar que sean solo números
     if (isNaN(usuario)) {
-        alert("La cédula solo puede contener números.");
+        mostrarError("La cédula solo puede contener números.");
         return;
     }
 
     // Validar contraseña
     if (contraseña.trim() === "") { // Esta linea elimina espacios para que no tome espacios vacios como contraseña valida
-        alert("Debe ingresar una contraseña.");
+        mostrarError("Debe ingresar una contraseña.");
         return;
     }
 
     // Validar rol
     if (rol === "") {
-        alert("Seleccione un rol.");
+        mostrarError("Seleccione un rol.");
         return;
     }
 
