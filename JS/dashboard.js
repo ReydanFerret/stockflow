@@ -40,6 +40,8 @@ function activarModoEditar(){
 
         document.getElementById("tablaProductos").classList.remove("modo-edicion");
 
+        document.getElementById("btnAgregar").textContent = "Agregar Producto";
+
         filaSeleccionada = null;
 
         return;
@@ -55,7 +57,6 @@ function activarModoEditar(){
     document.getElementById("tablaProductos").classList.add("modo-edicion");
 
     document.getElementById("tablaProductos").classList.remove("modo-eliminar");
-
 }
 
 function activarModoEliminar(){
@@ -78,10 +79,26 @@ function activarModoEliminar(){
 
     document.getElementById("btnEditar").textContent = "Editar";
 
+    document.getElementById("btnAgregar").textContent = "Agregar Producto";
+
     document.getElementById("tablaProductos").classList.add("modo-eliminar");
 
     document.getElementById("tablaProductos").classList.remove("modo-edicion");
 
+    filaSeleccionada = null;
+}
+
+function actualizarNumeros(){
+
+    let filas = document.getElementById("tablaProductos").rows;
+
+    for(let i = 1; i < filas.length; i++){
+
+        filas[i].cells[0].textContent = i;
+
+    }
+
+    contador = filas.length;
 }
 
 function agregarProducto() {
@@ -108,6 +125,45 @@ function agregarProducto() {
         return;
     }
 
+    if(modoEditar && filaSeleccionada){
+
+        filaSeleccionada.cells[1].textContent = producto;
+        filaSeleccionada.cells[2].textContent = "$" + precio;
+        filaSeleccionada.cells[3].textContent = stock;
+        filaSeleccionada.cells[5].textContent =
+            descripcion || "Sin descripción";
+
+        if(imagen){
+
+            let url = URL.createObjectURL(imagen);
+
+            filaSeleccionada.cells[4].innerHTML =
+                `<img src="${url}" width="80" alt="Imagen del producto">`;
+        }
+
+        document.getElementById("producto").value = "";
+        document.getElementById("precio").value = "";
+        document.getElementById("stock").value = "";
+        document.getElementById("imagen").value = "";
+        document.getElementById("descripcion").value = "";
+
+        filaSeleccionada = null;
+
+        modoEditar = false;
+
+        document.getElementById("tablaProductos")
+            .classList.remove("modo-edicion");
+
+        document.getElementById("btnEditar").textContent = "Editar";
+
+        document.getElementById("btnAgregar").textContent =
+            "Agregar Producto";
+
+        alert("Producto actualizado correctamente.");
+
+        return;
+    }
+
     let tabla = document.getElementById("tablaProductos");
     let fila = tabla.insertRow();
 
@@ -119,13 +175,19 @@ function agregarProducto() {
     let celdaImagen = fila.insertCell(4);
 
     if (imagen) {
+
         let url = URL.createObjectURL(imagen);
-        celdaImagen.innerHTML = `<img src="${url}" width="80" alt="Imagen del producto">`;
+
+        celdaImagen.innerHTML =
+            `<img src="${url}" width="80" alt="Imagen del producto">`;
+
     } else {
+
         celdaImagen.innerHTML = "Sin imagen";
     }
 
-    fila.insertCell(5).innerHTML = descripcion || "Sin descripción";
+    fila.insertCell(5).innerHTML =
+        descripcion || "Sin descripción";
 
     document.getElementById("producto").value = "";
     document.getElementById("precio").value = "";
@@ -146,22 +208,33 @@ document.getElementById("tablaProductos").addEventListener("click", function(e){
 
         filaSeleccionada = fila;
 
-        document.getElementById("producto").value = fila.cells[1].textContent;
+        document.getElementById("producto").value =
+            fila.cells[1].textContent;
 
         document.getElementById("precio").value =
-        fila.cells[2].textContent.replace("$","");
+            fila.cells[2].textContent.replace("$","");
 
         document.getElementById("stock").value =
-        fila.cells[3].textContent;
+            fila.cells[3].textContent;
 
         document.getElementById("descripcion").value =
-        fila.cells[5].textContent === "Sin descripción"
-        ? ""
-        : fila.cells[5].textContent;
+            fila.cells[5].textContent === "Sin descripción"
+            ? ""
+            : fila.cells[5].textContent;
 
         document.getElementById("btnAgregar").textContent =
-        "Guardar cambios";
-
+            "Guardar cambios";
     }
 
+    if(modoEliminar){
+
+        if(confirm("¿Deseas eliminar este producto?")){
+
+            fila.remove();
+
+            actualizarNumeros();
+
+            alert("Producto eliminado correctamente.");
+        }
+    }
 });
