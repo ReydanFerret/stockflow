@@ -4,6 +4,39 @@ let modoEditar = false;
 let modoEliminar = false;
 let filaSeleccionada = null;
 
+function mostrarError(mensaje) {
+    document.getElementById("mensajeError").innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            ${mensaje}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
+function mostrarExito(mensaje) {
+    document.getElementById("mensajeExito").innerHTML = `
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ${mensaje}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
+function mostrarAdvertencia(mensaje) {
+    document.getElementById("mensajeExito").innerHTML = `
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            ${mensaje}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
 function buscarProducto(){
 
     let filtro = document.getElementById("buscarProducto").value.toLowerCase();
@@ -110,17 +143,17 @@ function agregarProducto() {
     let descripcion = document.getElementById("descripcion").value.trim();
 
     if (producto === "" || precio === "" || stock === "") {
-        alert("Producto, Precio y Stock no pueden estar vacíos.");
+        mostrarError("Producto, Precio y Stock no pueden estar vacíos.");
         return;
     }
 
     if (precio < 0 || stock < 0) {
-        alert("Precio y Stock no pueden ser negativos.");
+        mostrarError("Precio y Stock no pueden ser negativos.");
         return;
     }
 
     if (imagen && !imagen.type.startsWith("image/")) {
-        alert("Solo se permiten archivos de imagen.");
+        mostrarError("Solo se permiten archivos de imagen.");
         document.getElementById("imagen").value = "";
         return;
     }
@@ -159,7 +192,7 @@ function agregarProducto() {
         document.getElementById("btnAgregar").textContent =
             "Agregar Producto";
 
-        alert("Producto actualizado correctamente.");
+        mostrarExito("Producto actualizado correctamente.");
 
         return;
     }
@@ -226,15 +259,22 @@ document.getElementById("tablaProductos").addEventListener("click", function(e){
             "Guardar cambios";
     }
 
-    if(modoEliminar){
+if (modoEliminar) {
+    const alerta = document.getElementById('alertaEliminar');
+    
+    alerta.classList.remove('d-none');
+    alerta.classList.add('d-flex');
 
-        if(confirm("¿Deseas eliminar este producto?")){
+    document.getElementById('btnSi').onclick = function() {
+        fila.remove();
+        actualizarNumeros();
+        mostrarExito("Producto eliminado correctamente.");
+        alerta.classList.replace('d-flex', 'd-none'); // Oculta la alerta
+    };
 
-            fila.remove();
+    document.getElementById('btnNo').onclick = function() {
+        alerta.classList.replace('d-flex', 'd-none'); // Oculta la alerta
+    };
+}
 
-            actualizarNumeros();
-
-            alert("Producto eliminado correctamente.");
-        }
-    }
 });

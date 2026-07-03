@@ -39,6 +39,17 @@
 
     <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">Lista de Productos</h2>
 
+    <div id="mensajeError" class="d-flex justify-content-center"></div>
+    <div id="mensajeExito" class="d-flex justify-content-center"></div>
+    <div id="alertaEliminar" class="alert alert-danger d-none flex-column justify-content-center align-items-center mx-auto" role="alert">
+        <span><strong>Advertencia:</strong> ¿Deseas eliminar este producto?</span>
+        <div class="d-flex gap-2">
+            <button id="btnSi" class="btn btn-danger btn-sm">Sí, eliminar</button>
+            <button id="btnNo" class="btn btn-secondary btn-sm">Cancelar</button>
+        </div>
+    </div>
+
+
     <div class="buscar_agregar_eliminar container d-flex justify-content-center align-items-center mx-auto mb-4">
 
     <input
