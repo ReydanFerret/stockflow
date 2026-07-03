@@ -1,36 +1,116 @@
 :root {
     --color-primario: #8dd0fd;
-    --color-secundario:#84b2fd;
-    --color-terciario: #57a1e6;
+    --color-secundario:#6399f0;
+    --color-terciario: #0F4A81;
+    --azul-tabla:#1f4e8c;
 }
 
-body {
+*{
+    box-sizing: border-box;
+}
+
+body{
     background-color: var(--color-primario);
     color: black;
-    font-family: "Roboto Condensed", sans-serif;
+    font-family: "Roboto Condensed",sans-serif;
 }
 
-    header{
-        background-color: var(--color-terciario);
-    }
+header{
+    background-color: var(--color-terciario);
+}
 
-    form{
-        background-color: var(--color-secundario);
-    }
+form{
+    background-color: var(--color-secundario);
+}
 
-    .btn-primary{
-        background-color: var(--color-terciario);
-        cursor:pointer;
-    }
+h2{
+    background-color:#6399f0;
+    width: fit-content;
+    border-radius: 12px;
+}
 
-    button:hover{
-        background-color: var(--color-secundario);
-        color: white;
-        transition: 0.5s;
-    }
+#alertaEliminar{
+    width: fit-content;
+}
 
-    footer{
-        margin-top: auto;
-        margin-bottom: 0;
-        background-color: var(--color-terciario);
-    }
+#buscarProducto{
+    border-radius:8px;
+    border:1px solid #000000;
+}
+
+.agregar-producto input,
+.agregar-producto textarea{
+    width: fit-content;
+    border-radius:8px;
+    border:1px solid #000000;
+}
+
+.btn-primary{
+    background-color:var(--color-terciario);
+    width: fit-content;
+    border:1px solid #000000;
+}
+
+.btn-primary:hover{
+    background-color:var(--color-secundario);
+}
+
+#btnEditar{
+    background:var(--color-secundario);
+    border:1px solid #000000;
+}
+
+#btnEditar:hover{
+    background:var(--color-terciario);
+}
+
+#btnEliminar{
+    background:#d32f2f;
+    border:1px solid #000000;
+}
+
+#btnEliminar:hover{
+    background:#b71c1c;
+}
+
+#tablaProductos{
+    background:white;
+    border-radius:20px;
+    overflow:scroll;
+}
+
+#tablaProductos thead th{
+    background-color:var(--azul-tabla);
+    color:white;
+    border:1px solid #000000;
+}
+
+#tablaProductos td{
+    background: var(--color-secundario);
+    border:1px solid #000000;
+}
+
+#tablaProductos tbody tr:hover td{
+    background:#edf5ff;
+    transition: 0.2s;
+    border:1px solid #000000;
+}
+
+#tablaProductos img{
+    width:80px;
+    height:80px;
+}
+
+footer{
+    background-color: var(--color-terciario);
+}
+
+.modo-edicion tr:hover td{
+    background:#b3d9ff !important;
+    cursor:pointer;
+}
+
+.modo-eliminar tr:hover td{
+    background:#ffb3b3 !important;
+    cursor:pointer;
+}
