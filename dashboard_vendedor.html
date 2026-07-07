@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockFlow</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>StockFlow</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header class="d-flex flex-row align-items-center justify-content-center w-100 header">
-        <img src="img/index(login)/logo.png" alt="Logo StockFlow" width="200" class="img-fluid">
-        <h1 class="mb-0 ms-3 display-6">Control de Stock y Ventas</h1>
-    </header>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        
+        <header class="d-flex flex-row align-items-center justify-content-center w-100 header">
+            <img src="img/index(login)/logo.png" alt="Logo StockFlow" width="200" class="img-fluid">
+            <h1 class="mb-0 ms-3 display-6">Control de Stock y Ventas</h1>
+        </header>
 
-    <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">Ventas</h2>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-    
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav w-100 justify-content-around">
-                    <a class="nav-link fs-5" href="dashboard.html">Volver</a>
-                    <a class="nav-link fs-5" href="index.html">Cerrar Sesión</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+        
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="navbar-nav w-100 justify-content-around">
+                        <a class="nav-link fs-5" href="dashboard.html">Volver</a>
+                        <a class="nav-link fs-5" href="index.html">Cerrar Sesión</a>
+                    </div>
                 </div>
             </div>
+        </nav>
+
+        <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">Ventas</h2>
+
+        <div class="container-fluid px-4 mb-4">
+            <div class="overflow-hidden rounded-4 shadow-sm">
+                <table id="tablaVentas" class="table mb-0">
+                    <thead class="text-center text-white">
+
+                        <tr class="fs-5">
+                            <th class="p-3">Fecha</th>
+                            <th class="p-3">Hora</th>
+                            <th class="p-3">Producto</th>
+                            <th class="p-3">Cantidad</th>
+                            <th class="p-3">Precio unitario</th>
+                            <th class="p-3">Total</th>
+                            <th class="p-3">Email Comprador</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="fs-5">
+                        <tr>
+                            <td>02/05/26</td>
+                            <td class="p-3">14:50</td>
+                            <td class="p-3">Teclado</td>
+                            <td class="p-3">5</td>
+                            <td class="p-3">500</td>
+                            <td class="p-3">25000</td>
+                            <td class="p-3">comprador1@gmail.com></tr>
+                        </tr>
+
+                        <tr>
+                            <td>02/05/26</td>
+                            <td>14:50</td>
+                            <td>Teclado</td>
+                            <td>5</td>
+                            <td>500</td>
+                            <td>25000</td>
+                            <td>comprador2@gmail.com</td>
+                        </tr>
+
+                        <tr>
+                            <td>02/05/26</td>
+                            <td>14:50</td>
+                            <td>Teclado</td>
+                            <td>5</td>
+                            <td>500</td>
+                            <td>25000</td>
+                            <td>comprador3@gmail.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </nav>
 
-    <div>
-        <table id="tablaVentas" class="table mb-0">
-                <thead class="text-center text-white">
-
-                    <tr class="fs-5">
-                        <th class="p-3">Fecha</th>
-                        <th class="p-3">Hora</th>
-                        <th class="p-3">Producto</th>
-                        <th class="p-3">Cantidad</th>
-                        <th class="p-3">Precio unitario</th>
-                        <th class="p-3">Total</th>
-                        <th class="p-3">Email Comprador</th>
-                    </tr>
-                </thead>
-
-                <tbody class="fs-5">
-                    <tr>
-                        <td>02/05/26</td>
-                        <td class="p-3">14:50</td>
-                        <td class="p-3">Teclado</td>
-                        <td class="p-3">5</td>
-                        <td class="p-3">500</td>
-                        <td class="p-3">25000</td>
-                        <td class="p-3">comprador1@gmail.com></tr>
-                    </tr>
-
-                    <tr>
-                        <td>02/05/26</td>
-                        <td>14:50</td>
-                        <td>Teclado</td>
-                        <td>5</td>
-                        <td>500</td>
-                        <td>25000</td>
-                        <td>comprador2@gmail.com</td>
-                    </tr>
-
-                    <tr>
-                        <td>02/05/26</td>
-                        <td>14:50</td>
-                        <td>Teclado</td>
-                        <td>5</td>
-                        <td>500</td>
-                        <td>25000</td>
-                        <td>comprador3@gmail.com</td>
-                    </tr>
-                </tbody>
-            </table>
-    </div>
-
-
-    <footer class="d-flex text-black p-3 justify-content-center">
-        <h3 class="h4">©2026 Archivement Project</h3>
-    </footer>
-</body>
+        <footer class="d-flex text-black p-3 justify-content-center">
+            <h3 class="h4">©2026 Archivement Project</h3>
+        </footer>
+    </body>
+</html>
