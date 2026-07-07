@@ -1,14 +1,6 @@
 let modoEditar = false;
 let valoresOriginalesStock = [];
 
-function mostrarError(mensaje) {
-    document.getElementById("mensajeError").innerHTML = `
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            ${mensaje}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    `;
-}
 
 function mostrarExito(mensaje) {
     document.getElementById("mensajeExito").innerHTML = `
@@ -20,7 +12,7 @@ function mostrarExito(mensaje) {
 }
 
 function mostrarAdvertencia(mensaje) {
-    document.getElementById("mensajeExito").innerHTML = `
+    document.getElementById("mensajeAdvertencia").innerHTML = `
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             ${mensaje}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
