@@ -27,7 +27,6 @@
         
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <div class="navbar-nav w-100 justify-content-around">
-                        <a class="nav-link fs-5" href="dashboard.html">Volver</a>
                         <a class="nav-link fs-5" href="index.html">Cerrar Sesión</a>
                     </div>
                 </div>
@@ -36,59 +35,103 @@
 
         <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">Ventas</h2>
 
+        <div class="agregar-producto container d-flex row justify-content-center align-items-center mx-auto mb-4 flex-wrap gap-3">
+
+            <select class="form-select p-2 fs-6" id="selectProducto"></select>
+
+            <input
+                type="number"
+                class="form-control p-2 fs-6"
+                id="cantidad"
+                placeholder="Cantidad"
+                min="1"
+                required>
+
+            <input
+                type="text"
+                class="form-control p-2 fs-6"
+                id="precio"
+                placeholder="Precio Unitario"
+                readonly>
+
+            <input
+                type="text"
+                class="form-control p-2 fs-6"
+                id="total"
+                placeholder="Total"
+                readonly>
+
+            <button
+                type="submit"
+                class="btn btn-primary px-4 py-2 fs-6"
+                id="btnRegistrarVenta">
+
+                Registrar Venta
+
+            </button>
+
+        </div>
         <div class="container-fluid px-4 mb-4">
-            <div class="overflow-hidden rounded-4 shadow-sm">
-                <table id="tablaVentas" class="table mb-0">
-                    <thead class="text-center text-white">
+            <div class="table-responsive">
+                <div class="overflow-hidden rounded-4 shadow-sm">
+                    <table id="tablaVentas" class="table mb-0">
+                        <thead class="text-center text-white">
 
-                        <tr class="fs-5">
-                            <th class="p-3">Fecha</th>
-                            <th class="p-3">Hora</th>
-                            <th class="p-3">Producto</th>
-                            <th class="p-3">Cantidad</th>
-                            <th class="p-3">Precio unitario</th>
-                            <th class="p-3">Total</th>
-                            <th class="p-3">Email Comprador</th>
-                        </tr>
-                    </thead>
+                            <tr class="fs-5">
+                                <th class="p-3">Fecha</th>
+                                <th class="p-3">Hora</th>
+                                <th class="p-3">Producto</th>
+                                <th class="p-3">Cantidad</th>
+                                <th class="p-3">Precio unitario</th>
+                                <th class="p-3">Total</th>
+                                <th class="p-3">Código del comprador</th>
+                            </tr>
+                        </thead>
 
-                    <tbody class="fs-5">
-                        <tr>
-                            <td>02/05/26</td>
-                            <td class="p-3">14:50</td>
-                            <td class="p-3">Teclado</td>
-                            <td class="p-3">5</td>
-                            <td class="p-3">500</td>
-                            <td class="p-3">25000</td>
-                            <td class="p-3">comprador1@gmail.com></tr>
-                        </tr>
+                        <tbody class="fs-5">
+                            <tr>
+                                <td>28/03/2026</td>
+                                <td>14:05</td>
+                                <td>Teclado Mecánico</td>
+                                <td>1</td>
+                                <td>$25</td>
+                                <td>$25</td>
+                                <td>C000001</td>
+                            </tr>
 
-                        <tr>
-                            <td>02/05/26</td>
-                            <td>14:50</td>
-                            <td>Teclado</td>
-                            <td>5</td>
-                            <td>500</td>
-                            <td>25000</td>
-                            <td>comprador2@gmail.com</td>
-                        </tr>
+                            <tr>
+                                <td>05/04/2026</td>
+                                <td>16:45</td>
+                                <td>Mouse Gamer</td>
+                                <td>2</td>
+                                <td>$60</td>
+                                <td>$120</td>
+                                <td>C000002</td>
+                            </tr>
 
-                        <tr>
-                            <td>02/05/26</td>
-                            <td>14:50</td>
-                            <td>Teclado</td>
-                            <td>5</td>
-                            <td>500</td>
-                            <td>25000</td>
-                            <td>comprador3@gmail.com</td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <tr>
+                                <td>12/06/2026</td>
+                                <td>09:50</td>
+                                <td>Auriculares</td>
+                                <td>1</td>
+                                <td>$40</td>
+                                <td>$40</td>
+                                <td>C000003</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <footer class="d-flex text-black p-3 justify-content-center">
             <h3 class="h4">©2026 Archivement Project</h3>
         </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+        <script src="JS/dashboard_vendedor.js"></script>
+
     </body>
 </html>
