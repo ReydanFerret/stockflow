@@ -39,13 +39,13 @@
 
     <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">Generador de reportes</h2>
 
-    <div class="container-fluid d-flex">
-        <label for="fechaDesde" class="form-label fs-5">Fecha inicial del reporte:</label>
+    <div class="container-fluid d-flex w-auto align-items-center mx-auto flex-wrap">
+        <label for="fechaDesde" class="form-label fs-5 w-auto mx-3 mb-3">Fecha inicial</label>
         <input type="date" class="form-control w-auto mx-3 mb-3" id="fechaDesde" name="fechaInicio" min="2000-01-01" max="2026-12-31">
-
-        <label for="fechaHasta" class="form-label fs-5">Fecha final del reporte:</label>
-        <input type="date" class="form-control mx-3 w-auto mb-3" id="fechaDesde" name="fechaInicio" min="2000-01-01" max="2026-12-31">
-
+        
+        <label for="fechaHasta" class="form-label fs-5 w-auto mx-3 mb-3">Fecha final</label>
+        <input type="date" class="form-control mx-3 w-auto mb-3" id="fechaHasta" name="fechaInicio" min="2000-01-01" max="2026-12-31">
+        
         <select id="tipoReporte" class="form-select fs-6 w-auto mx-3 mb-3" name="tipoReporte">
             <option value="">Seleccione un tipo</option>
             <option value="admin">Ventas</option>
@@ -53,7 +53,7 @@
             <option value="repositor">Gastos</option>
         </select>
 
-        <button id="btnGenerarReportes" class="btn btn-primary mb-3 fs-6 mx-3">
+        <button id="btnGenerarReportes" class="btn btn-primary mb-3 fs-6 mx-3 w-auto">
             Generar reporte
         </button>
     </div>
