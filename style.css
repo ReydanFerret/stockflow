@@ -73,19 +73,19 @@ h2{
     background:#b71c1c;
 }
 
-#tablaProductos{
+#tablaProductos, #tablaReportes{
     background:white;
     border-radius:20px;
     overflow:scroll;
 }
 
-#tablaProductos thead th{
+#tablaProductos thead th, #tablaReportes thead th{
     background-color:var(--azul-tabla);
     color:white;
     border:1px solid #000000;
 }
 
-#tablaProductos td{
+#tablaProductos td, #tablaReportes td{
     background: var(--color-secundario);
     border:1px solid #000000;
 }
