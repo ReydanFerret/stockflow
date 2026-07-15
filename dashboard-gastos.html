@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockFlow</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="d-flex flex-row align-items-center justify-content-center w-100 header">
+        <img src="img/index(login)/logo.png" alt="Logo StockFlow" width="200" class="img-fluid">
+        <h1 class="mb-0 ms-3 display-6">Control de Stock y Ventas</h1>
+    </header>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav w-100 justify-content-around">
+                    <a class="nav-link fs-5" href="index.html">Cerrar Sesión</a>
+                    <a class="nav-link fs-5" href="dashboard-vendedor.html">Ventas</a>
+                    <a class="nav-link fs-5" href="dashboard-repositor.html">Inventario</a>
+                    <a class="nav-link fs-5" href="dashboard-gastos.html">Gastos</a>
+                    <a class="nav-link fs-5" href="dashboard-reportes.html">Reportes</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">
+        Gastos
+    </h2>
+
+    <div class="agregar-producto container d-flex row justify-content-center align-items-center mx-auto mb-4 flex-wrap gap-3">
+
+        <select
+            class="form-select p-2 fs-6"
+            id="tipoGasto">
+
+            <option selected disabled>
+                Categoría
+            </option>
+
+            <option>Compra de mercadería</option>
+            <option>Pago de servicios</option>
+            <option>Alquiler</option>
+            <option>Salarios</option>
+            <option>Mantenimiento</option>
+            <option>Transporte</option>
+            <option>Publicidad</option>
+            <option>Impuestos</option>
+            <option>Otro</option>
+
+        </select>
+
+        <input
+            type="text"
+            class="form-control p-2 fs-6 d-none"
+            id="otroTipoGasto"
+            placeholder="Especifique la categoría"
+            maxlength="60">
+
+        <input
+            type="text"
+            class="form-control p-2 fs-6"
+            id="descripcionGasto"
+            placeholder="Concepto"
+            maxlength="100">
+
+        <input
+            type="text"
+            class="form-control p-2 fs-6"
+            id="montoGasto"
+            placeholder="Monto"
+            inputmode="numeric"
+            maxlength="9"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+
+        <select
+            class="form-select p-2 fs-6"
+            id="metodoPago">
+
+            <option selected disabled>
+                Método de pago
+            </option>
+
+            <option>Efectivo</option>
+            <option>Débito</option>
+            <option>Crédito</option>
+            <option>Transferencia</option>
+            <option>Cheque</option>
+            <option>Otro</option>
+
+        </select>
+
+        <input
+            type="text"
+            class="form-control p-2 fs-6 d-none"
+            id="otroMetodoPago"
+            placeholder="Especifique el método de pago"
+            maxlength="50">
+
+        <textarea
+            class="form-control p-2 fs-6"
+            id="observacionesGasto"
+            placeholder="Observaciones (opcional)"
+            maxlength="250"></textarea>
+
+        <button
+            type="button"
+            class="btn btn-primary px-4 py-2 fs-6"
+            id="btnRegistrarGasto">
+
+            Registrar Gasto
+
+        </button>
+
+    </div>
+
+    <div class="container-fluid px-4 mb-4">
+
+        <div class="table-responsive">
+
+            <div class="overflow-auto rounded-4 shadow-sm">
+
+                <table id="tablaGastos" class="table mb-0">
+
+                    <thead class="text-center text-white">
+
+                        <tr class="fs-5">
+
+                            <th class="p-3">Fecha</th>
+                            <th class="p-3">Hora</th>
+                            <th class="p-3">Concepto</th>
+                            <th class="p-3">Categoría</th>
+                            <th class="p-3">Método de Pago</th>
+                            <th class="p-3">Monto</th>
+                            <th class="p-3">Observaciones</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="fs-5">
+                        <tr>
+                            <td>03/01/2026</td>
+                            <td>09:30</td>
+                            <td>Compra de Mercadería</td>
+                            <td>Inventario</td>
+                            <td>Transferencia</td>
+                            <td>$850</td>
+                            <td>Proveedor TechMarket</td>
+                        </tr>
+
+                        <tr>
+                            <td>15/02/2026</td>
+                            <td>14:15</td>
+                            <td>Pago de Internet</td>
+                            <td>Servicios</td>
+                            <td>Débito</td>
+                            <td>$75</td>
+                            <td>Factura mensual</td>
+                        </tr>
+
+                        <tr>
+                            <td>28/03/2026</td>
+                            <td>11:40</td>
+                            <td>Publicidad en Redes</td>
+                            <td>Marketing</td>
+                            <td>Crédito</td>
+                            <td>$220</td>
+                            <td>Campaña de Instagram</td>
+                        </tr>
+
+                        <tr>
+                            <td>08/05/2026</td>
+                            <td>16:20</td>
+                            <td>Mantenimiento de Equipos</td>
+                            <td>Mantenimiento</td>
+                            <td>Efectivo</td>
+                            <td>$180</td>
+                            <td>Limpieza de computadoras</td>
+                        </tr>
+
+                        <tr>
+                            <td>21/06/2026</td>
+                            <td>10:05</td>
+                            <td>Pago de Electricidad</td>
+                            <td>Servicios</td>
+                            <td>Transferencia</td>
+                            <td>$130</td>
+                            <td>Factura UTE</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="d-flex text-black p-3 justify-content-center">
+
+        <h3 class="h4">
+            ©2026 Archivement Project
+        </h3>
+
+    </footer>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous">
+    </script>
+
+    <script src="JS/gastos.js"></script>
+
+</body>
+</html>
