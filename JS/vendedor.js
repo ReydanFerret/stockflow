@@ -88,25 +88,40 @@ function calcularTotal() {
 
 }
 
+// Esto es para mostrar las alertas sin usar al alert
+function mostrarAlerta(mensaje, tipo) {
+    const contenedor = document.getElementById("contenedorAlertas");
+    if (contenedor) { // Validación de seguridad
+        contenedor.innerHTML = `
+            <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                ${mensaje}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+    } else {
+        console.error("No se encontró el contenedor con ID 'contenedorAlertas' en el HTML.");
+    }
+}
+
+
 //Evento del botón para registrar una nueva venta
 btnRegistrarVenta.addEventListener("click", function (e) {
 
     e.preventDefault(); //Evita que el formulario recargue la página
+    
+    // Limpia alertas previas en la pantalla
+    document.getElementById("contenedorAlertas").innerHTML = "";
 
     //Validación: debe haber un producto seleccionado
     if (selectProducto.value === "") {
-
-        alert("Seleccione un producto.");
+        mostrarAlerta("Seleccione un producto.", "danger");
         return;
-
     }
 
     //Validación: debe haber una cantidad cargada
     if (cantidad.value === "") {
-
-        alert("Ingrese una cantidad.");
+        mostrarAlerta("Ingrese una cantidad.", "danger");
         return;
-
     }
 
     //Se obtiene la fecha y hora actual del sistema
@@ -144,6 +159,9 @@ btnRegistrarVenta.addEventListener("click", function (e) {
 
     //Se agrega la fila creada al cuerpo (tbody) de la tabla de ventas
     tablaVentas.appendChild(fila);
+
+    // Muestra el mensaje de éxito usando el formato que buscabas
+    mostrarAlerta("Venta registrada con éxito.", "success");
 
     //Se resetean los campos del formulario para cargar una nueva venta
     selectProducto.selectedIndex = 0; //Vuelve a mostrar "Seleccione un producto"

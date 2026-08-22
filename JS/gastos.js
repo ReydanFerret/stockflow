@@ -8,6 +8,21 @@ const btnRegistrarGasto = document.getElementById("btnRegistrarGasto");
 const tablaGastos = document.querySelector("#tablaGastos tbody");
 const observacionesGasto = document.getElementById("observacionesGasto");
 
+// Esto es para mostrar las alertas sin usar al alert
+function mostrarAlerta(mensaje, tipo) {
+    const contenedor = document.getElementById("contenedorAlertas");
+    if (contenedor) { // Validación de seguridad
+        contenedor.innerHTML = `
+            <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                ${mensaje}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+    } else {
+        console.error("No se encontró el contenedor con ID 'contenedorAlertas' en el HTML.");
+    }
+}
+
 tipoGasto.addEventListener("change", function () {
 
     if (this.value === "Otro") {
@@ -40,76 +55,71 @@ metodoPago.addEventListener("change", function () {
 
 });
 
-btnRegistrarGasto.addEventListener("click", function () {
+btnRegistrarGasto.addEventListener("click", function (e) {
+    e.preventDefault(); // Evita comportamientos extraños del botón
 
+    // Limpia alertas previas borrando el contenido del contenedor si existe
+    const contenedorExistente = document.getElementById("contenedorAlertas");
+    if (contenedorExistente) {
+        contenedorExistente.innerHTML = "";
+    }
+
+    // Validación: tipo de gasto
     if (tipoGasto.selectedIndex === 0) {
-
-        alert("Seleccione un tipo de gasto.");
+        mostrarAlerta("Seleccione un tipo de gasto.", "danger", btnRegistrarGasto);
         return;
-
     }
 
+    // Validación: descripción
     if (descripcionGasto.value.trim() === "") {
-
-        alert("Ingrese una descripción.");
+        mostrarAlerta("Ingrese un concepto de gasto.", "danger", btnRegistrarGasto);
         return;
-
     }
 
+    // Validación: monto
     if (montoGasto.value === "" || Number(montoGasto.value) <= 0) {
-
-        alert("Ingrese un monto válido.");
+        mostrarAlerta("Ingrese un monto válido.", "danger", btnRegistrarGasto);
         return;
-
     }
 
+    // Validación: método de pago
     if (metodoPago.selectedIndex === 0) {
-
-        alert("Seleccione un método de pago.");
+        mostrarAlerta("Seleccione un método de pago.", "danger", btnRegistrarGasto);
         return;
-
     }
 
     let categoria = tipoGasto.value;
 
+    // Validación condicional: "Otro" tipo de gasto
     if (categoria === "Otro") {
-
         if (otroTipoGasto.value.trim() === "") {
-
-            alert("Especifique el tipo de gasto.");
+            mostrarAlerta("Especifique el tipo de gasto.", "danger", btnRegistrarGasto);
             return;
-
         }
-
         categoria = otroTipoGasto.value.trim();
-
     }
 
     let metodo = metodoPago.value;
 
+    // Validación condicional: "Otro" método de pago
     if (metodo === "Otro") {
-
         if (otroMetodoPago.value.trim() === "") {
-
-            alert("Especifique el método de pago.");
+            mostrarAlerta("Especifique el método de pago.", "danger", btnRegistrarGasto);
             return;
-
         }
-
         metodo = otroMetodoPago.value.trim();
-
     }
 
+    // Se obtiene la fecha y hora actual del sistema
     const ahora = new Date();
-
     const fecha = ahora.toLocaleDateString("es-UY");
-
     const hora = ahora.toLocaleTimeString("es-UY", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false
     });
 
+    // Se crea la nueva fila para la tabla de gastos
     const fila = document.createElement("tr");
     fila.innerHTML = `
         <td>${fecha}</td>
@@ -123,16 +133,17 @@ btnRegistrarGasto.addEventListener("click", function () {
 
     tablaGastos.appendChild(fila);
 
+    // Muestra alerta verde de éxito arriba del botón
+    mostrarAlerta("Gasto registrado con éxito.", "success", btnRegistrarGasto);
+
+    // Se resetean los campos del formulario
     tipoGasto.selectedIndex = 0;
     otroTipoGasto.value = "";
     otroTipoGasto.classList.add("d-none");
     observacionesGasto.value = "";
     descripcionGasto.value = "";
-
     montoGasto.value = "";
-
     metodoPago.selectedIndex = 0;
     otroMetodoPago.value = "";
     otroMetodoPago.classList.add("d-none");
-
 });

@@ -34,8 +34,9 @@ footer{
     background-color:var(--color-terciario);
 }
 
-#alertaEliminar{
+#alertaEliminar, #contenedorAlertas{
     width:fit-content;
+    justify-self: center;
 }
 
 #buscarProducto{
