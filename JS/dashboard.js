@@ -30,6 +30,17 @@ function mostrarExito(mensaje) {
     `;
 }
 
+function mostrarAdvertencia(mensaje) {
+    document.getElementById("mensajeExito").innerHTML = `
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            ${mensaje}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
 //Funcion para buscar productos dentro de la tabla de estos
 function buscarProducto(){
     //Declaración de variables de la tabla de productos, la barra de busqueda de los mismos
@@ -59,7 +70,6 @@ function buscarProducto(){
         }
     }
 }
-
 //Función para activar o desactivar el modo de edición de productos
 function activarModoEditar(){
     //Si el modo edición ya está activo, se desactiva
@@ -268,7 +278,27 @@ function agregarProducto() {
 }
 
 //Escucha los clics dentro de la tabla de productos para capturar la fila seleccionada
-document.getElementById("tablaProductos").addEventListener("click", function(e){
+document.getElementById("buscarProducto").addEventListener("keyup", buscarProducto);
+
+document.getElementById("btnEditar").addEventListener("click", activarModoEditar);
+
+document.getElementById("btnEliminar").addEventListener("click", activarModoEliminar);
+
+document.getElementById("btnAgregar").addEventListener("click", agregarProducto);
+
+document.getElementById("producto").addEventListener("input", function () {
+    this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ."()]/g, "");
+});
+
+document.getElementById("precio").addEventListener("input", function () {
+    this.value = this.value.replace(/[^0-9]/g, "");
+});
+
+document.getElementById("stock").addEventListener("input", function () {
+    this.value = this.value.replace(/[^0-9]/g, "");
+});
+
+document.getElementById("tablaProductos").addEventListener("click", function (e) {
 
     //Encuentra la fila (tr) más cercana al elemento exacto donde el usuario hizo clic
     let fila = e.target.closest("tr");
@@ -281,6 +311,11 @@ document.getElementById("tablaProductos").addEventListener("click", function(e){
     //EN MODO EDICIÓN
     //Si el modo edición está encendido, carga los datos de esa fila en el formulario
     if(modoEditar){
+    if (!fila || fila.rowIndex === 0) {
+        return;
+    }
+
+    if (modoEditar) {
 
         //Guarda la fila clickeada en la variable global para saber cuál vamos a actualizar después
         filaSeleccionada = fila;
@@ -327,5 +362,6 @@ document.getElementById("tablaProductos").addEventListener("click", function(e){
         document.getElementById('btnNo').onclick = function() {
             alerta.classList.replace('d-flex', 'd-none'); //Cierra la alerta sin borrar nada
         };
+     }
     }
 });
