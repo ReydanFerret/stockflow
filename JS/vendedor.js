@@ -22,9 +22,6 @@ const total = document.getElementById("total");
 const btnRegistrarVenta = document.getElementById("btnRegistrarVenta");
 const tablaVentas = document.querySelector("#tablaVentas tbody");
 
-//Variable que guarda el último código de comprador generado y que arranca en 3
-let ultimoCodigo = 3;
-
 //Se crea la opción por defecto del select (placeholder)
 const opcionInicial = document.createElement("option");
 
@@ -137,12 +134,6 @@ btnRegistrarVenta.addEventListener("click", function (e) {
         hour12: false
     });
 
-    //Se incrementa el contador de código de comprador
-    ultimoCodigo++;
-
-    //Se arma el código del comprador, ej: C000004 (se rellena con ceros a la izquierda)
-    const codigoComprador = "C" + String(ultimoCodigo).padStart(6, "0");
-
     //Se crea una nueva fila (<tr>) para la tabla de ventas
     const fila = document.createElement("tr");
 
@@ -154,7 +145,6 @@ btnRegistrarVenta.addEventListener("click", function (e) {
         <td>${cantidad.value}</td>
         <td>$${precio.value}</td>
         <td>$${total.value}</td>
-        <td>${codigoComprador}</td>
     `;
 
     //Se agrega la fila creada al cuerpo (tbody) de la tabla de ventas
