@@ -51,6 +51,29 @@ function buscarProducto() {
     }
 }
 
+//Funcion para comprobar si el stock está por debajo del umbral mínimo
+function comprobarStock(fila) {
+
+    let stock = Number(fila.cells[3].textContent);
+    let umbral = Number(fila.cells[4].textContent);
+
+    if (stock < umbral) {
+        fila.cells[3].style.backgroundColor = "#fdea7b";
+    } else {
+        fila.cells[3].style.backgroundColor = "";
+    }
+}
+
+//Funcion para comprobar el stock de todos los productos existentes
+function comprobarTodosLosStocks() {
+
+    let filas = document.querySelectorAll("#tablaProductos tbody tr");
+
+    filas.forEach(function(fila) {
+        comprobarStock(fila);
+    });
+}
+
 //Activar o cancelar el modo edición
 
 //Alterna entre modo edición y modo normal.
@@ -67,7 +90,8 @@ function activarModoEditar() {
         document.getElementById("btnEditar").textContent = "Editar";
         document.getElementById("btnEditar").className = "btn btn-success px-4 py-2 fs-6 mx-3";
         document.getElementById("tablaProductos").classList.remove("modo-edicion");
-        restaurarCeldasTexto(false); //false = no guardar cambios, restaurar valores originales
+        restaurarCeldasTexto(false);
+        comprobarTodosLosStocks();
         mostrarAdvertencia("Cambios de stock descartados.");
         return;
     }
@@ -123,20 +147,25 @@ function convertirCeldasAStockEditables() {
 
         //Columna 3: stock se convierte en un input editable
         let stockActual = fila.cells[3].textContent;
+        fila.cells[3].style.backgroundColor = "";
         fila.cells[3].innerHTML = `<input type="text" value="${stockActual}" class="stock-input" style="border: 2px solid #28a745; border-radius: 4px; padding: 4px 8px; width: 80px; text-align: center; font-size: 16px; background-color: white;">`;
 
-        //Columna 4: imagen (o texto si no hay imagen) se fija, distinguiendo
+        //Columna 4: umbral mínimo se fija como texto
+        let umbral = fila.cells[4].textContent;
+        fila.cells[4].innerHTML = `<span class="texto-fijo">${umbral}</span>`;
+
+        //Columna 5: imagen (o texto si no hay imagen) se fija, distinguiendo
         //si contiene una etiqueta <img> para mantener el HTML de la imagen intacto
-        let imagenHtml = fila.cells[4].innerHTML;
+        let imagenHtml = fila.cells[5].innerHTML;
         if (imagenHtml.includes('<img')) {
-            fila.cells[4].innerHTML = `<span class="texto-fijo-imagen">${imagenHtml}</span>`;
+            fila.cells[5].innerHTML = `<span class="texto-fijo-imagen">${imagenHtml}</span>`;
         } else {
-            fila.cells[4].innerHTML = `<span class="texto-fijo">${fila.cells[4].textContent}</span>`;
+            fila.cells[5].innerHTML = `<span class="texto-fijo">${fila.cells[5].textContent}</span>`;
         }
 
-        //Columna 5: descripción se fija como texto (no editable)
-        let descripcion = fila.cells[5].textContent;
-        fila.cells[5].innerHTML = `<span class="texto-fijo">${descripcion}</span>`;
+        //Columna 6: descripción se fija como texto (no editable)
+        let descripcion = fila.cells[6].textContent;
+        fila.cells[6].innerHTML = `<span class="texto-fijo">${descripcion}</span>`;
     }
 
     //Agrega los eventos de validación a todos los inputs de stock recién creados
@@ -146,9 +175,15 @@ function convertirCeldasAStockEditables() {
         //no permite valores negativos y limita a 8 caracteres
         input.addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '');
+
+            if (this.value.length > 1) {
+                this.value = this.value.replace(/^0+/, "");
+            }
+
             if (parseInt(this.value) < 0) {
                 this.value = 0;
             }
+
             if (this.value.length > 8) {
                 this.value = this.value.slice(0, 8);
             }
@@ -160,6 +195,7 @@ function convertirCeldasAStockEditables() {
             if (this.value === '' || isNaN(parseInt(this.value))) {
                 this.value = 0;
             }
+
             if (parseInt(this.value) < 0) {
                 this.value = 0;
             }
@@ -193,7 +229,8 @@ function guardarYSalirEdicion() {
         document.getElementById("btnEditar").textContent = "Editar";
         document.getElementById("btnEditar").className = "btn btn-success px-4 py-2 fs-6 mx-3";
         document.getElementById("tablaProductos").classList.remove("modo-edicion");
-        restaurarCeldasTexto(true); //true = conservar los cambios guardados
+        restaurarCeldasTexto(true);
+        comprobarTodosLosStocks();
         mostrarExito("Stock actualizado correctamente.");
     }
 }
@@ -232,6 +269,7 @@ function restaurarCeldasTexto(guardarCambios) {
         if (stockInput) {
             if (guardarCambios) {
                 let nuevoStock = parseInt(stockInput.value);
+
                 if (!isNaN(nuevoStock) && nuevoStock >= 0) {
                     fila.cells[3].textContent = nuevoStock;
                 } else {
@@ -242,22 +280,28 @@ function restaurarCeldasTexto(guardarCambios) {
             }
         }
 
+        //Restaura el umbral mínimo desde el span.texto-fijo
+        let umbralSpan = fila.cells[4].querySelector('.texto-fijo');
+        if (umbralSpan) {
+            fila.cells[4].textContent = umbralSpan.textContent;
+        }
+
         //Restaura la columna de imagen: si había una imagen, recupera su HTML;
         //si era solo texto, recupera el texto
-        let imagenSpan = fila.cells[4].querySelector('.texto-fijo-imagen');
+        let imagenSpan = fila.cells[5].querySelector('.texto-fijo-imagen');
         if (imagenSpan) {
-            fila.cells[4].innerHTML = imagenSpan.innerHTML;
+            fila.cells[5].innerHTML = imagenSpan.innerHTML;
         } else {
-            let imagenSpanTexto = fila.cells[4].querySelector('.texto-fijo');
+            let imagenSpanTexto = fila.cells[5].querySelector('.texto-fijo');
             if (imagenSpanTexto) {
-                fila.cells[4].textContent = imagenSpanTexto.textContent;
+                fila.cells[5].textContent = imagenSpanTexto.textContent;
             }
         }
 
         //Restaura la descripción desde el span.texto-fijo
-        let descripcionSpan = fila.cells[5].querySelector('.texto-fijo');
+        let descripcionSpan = fila.cells[6].querySelector('.texto-fijo');
         if (descripcionSpan) {
-            fila.cells[5].textContent = descripcionSpan.textContent;
+            fila.cells[6].textContent = descripcionSpan.textContent;
         }
     }
 }
@@ -276,9 +320,13 @@ function guardarCambiosStock() {
 
         if (stockInput) {
             let nuevoStock = parseInt(stockInput.value);
+
             if (!isNaN(nuevoStock) && nuevoStock >= 0) {
                 fila.cells[3].textContent = nuevoStock;
             }
         }
     }
 }
+
+//Comprueba los productos que ya estaban escritos en la tabla al cargar la página
+comprobarTodosLosStocks();

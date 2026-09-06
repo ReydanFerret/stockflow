@@ -41,6 +41,29 @@ function mostrarAdvertencia(mensaje) {
     `;
 }
 
+//Funcion para comprobar si el stock está por debajo del umbral mínimo
+function comprobarStock(fila) {
+
+    let stock = Number(fila.cells[3].textContent);
+    let umbral = Number(fila.cells[4].textContent);
+
+    if (stock < umbral) {
+        fila.cells[3].style.backgroundColor = "#fdea7b";
+    } else {
+        fila.cells[3].style.backgroundColor = "";
+    }
+}
+
+//Funcion para comprobar el stock de todos los productos existentes
+function comprobarTodosLosStocks() {
+
+    let filas = document.querySelectorAll("#tablaProductos tbody tr");
+
+    filas.forEach(function(fila) {
+        comprobarStock(fila);
+    });
+}
+
 //Funcion para buscar productos dentro de la tabla de estos
 function buscarProducto(){
     //Declaración de variables de la tabla de productos, la barra de busqueda de los mismos
@@ -70,6 +93,7 @@ function buscarProducto(){
         }
     }
 }
+
 //Función para activar o desactivar el modo de edición de productos
 function activarModoEditar(){
     //Si el modo edición ya está activo, se desactiva
@@ -93,6 +117,8 @@ function activarModoEditar(){
         //Limpia todos los inputs dentro del div al cancelar la edicion
         const inputs = document.querySelectorAll(".agregar-producto input");
         inputs.forEach(input => input.value = "");
+
+        document.getElementById("descripcion").value = "";
 
         //Sale de la función inmediatamente para no ejecutar el código de abajo
         return;
@@ -172,7 +198,6 @@ function actualizarNumeros(){
     contador = filas.length;
 }
 
-
 //Función para registrar un nuevo producto en la tabla o guardar los cambios del modo edición
 function agregarProducto() {
 
@@ -182,25 +207,26 @@ function agregarProducto() {
     let producto = document.getElementById("producto").value.trim();
     let precio = document.getElementById("precio").value;
     let stock = document.getElementById("stock").value;
+    let umbral = document.getElementById("umbral").value;
     let imagen = document.getElementById("imagen").files[0];
     let descripcion = document.getElementById("descripcion").value.trim();
 
-    //Valida que los campos obligatorios (producto, precio y stock) no estén vacíos
-    if (producto === "" || precio === "" || stock === "") {
-        mostrarError("Producto, Precio y Stock no pueden estar vacíos.");
+    //Valida que los campos obligatorios (producto, precio, stock y umbral) no estén vacíos
+    if (producto === "" || precio === "" || stock === "" || umbral === "") {
+        mostrarError("Producto, Precio, Stock y Umbral mínimo no pueden estar vacíos.");
         return;
     }
 
-    //Valida que los números ingresados en precio y stock no sean menores a cero
-    if (precio < 0 || stock < 0) {
-        mostrarError("Precio y Stock no pueden ser negativos.");
+    //Valida que los números ingresados en precio, stock y umbral no sean menores a cero
+    if (precio < 0 || stock < 0 || umbral < 0) {
+        mostrarError("Precio, Stock y Umbral mínimo no pueden ser negativos.");
         return;
     }
 
     //Valida que el archivo subido sea realmente una imagen comprobando su tipo
     if (imagen && !imagen.type.startsWith("image/")) {
         mostrarError("Solo se permiten archivos de imagen.");
-        document.getElementById("imagen").value = ""; //Limpia el campo de archivo inválido
+        document.getElementById("imagen").value = "";
         return;
     }
 
@@ -212,18 +238,22 @@ function agregarProducto() {
         filaSeleccionada.cells[1].textContent = producto;
         filaSeleccionada.cells[2].textContent = "$" + precio;
         filaSeleccionada.cells[3].textContent = stock;
-        filaSeleccionada.cells[5].textContent = descripcion || "Sin descripción";
+        filaSeleccionada.cells[4].textContent = umbral;
+        filaSeleccionada.cells[6].textContent = descripcion || "Sin descripción";
 
         //Si el usuario subió una nueva imagen durante la edición, reemplaza la anterior
         if(imagen){
-            let url = URL.createObjectURL(imagen); //Crea una ruta temporal para la nueva imagen
-            filaSeleccionada.cells[4].innerHTML = `<img src="${url}" width="80" alt="Imagen del producto">`;
+            let url = URL.createObjectURL(imagen);
+            filaSeleccionada.cells[5].innerHTML = `<img src="${url}" width="80" alt="Imagen del producto">`;
         }
+
+        comprobarStock(filaSeleccionada);
 
         //Limpia todos los campos del formulario para dejarlos vacíos
         document.getElementById("producto").value = "";
         document.getElementById("precio").value = "";
         document.getElementById("stock").value = "";
+        document.getElementById("umbral").value = "";
         document.getElementById("imagen").value = "";
         document.getElementById("descripcion").value = "";
 
@@ -246,16 +276,17 @@ function agregarProducto() {
     //SECCIÓN DE CREACIÓN
     //Si no se estaba editando, se procede a insertar un nuevo producto al final de la tabla
     let tabla = document.getElementById("tablaProductos");
-    let fila = tabla.insertRow(); //Crea una nueva fila HTML
+    let fila = tabla.insertRow();
 
-    //Inserta y rellena las primeras celdas (Numero de producto, Nombre, Precio y Stock)
-    fila.insertCell(0).innerHTML = contador++; //Asigna el numero de producto actual e incrementa el contador global
+    //Inserta y rellena las primeras celdas
+    fila.insertCell(0).innerHTML = contador++;
     fila.insertCell(1).innerHTML = producto;
     fila.insertCell(2).innerHTML = "$" + precio;
     fila.insertCell(3).innerHTML = stock;
+    fila.insertCell(4).innerHTML = umbral;
 
     //Crea la celda destinada a la imagen del producto
-    let celdaImagen = fila.insertCell(4);
+    let celdaImagen = fila.insertCell(5);
 
     //Si se seleccionó una imagen, crea su URL temporal y la dibuja dentro de la celda
     if (imagen) {
@@ -267,14 +298,19 @@ function agregarProducto() {
     }
 
     //Inserta la celda de descripción asignando un texto alternativo si quedó vacía
-    fila.insertCell(5).innerHTML = descripcion || "Sin descripción";
+    fila.insertCell(6).innerHTML = descripcion || "Sin descripción";
+
+    comprobarStock(fila);
 
     //Limpia todos los campos del formulario para permitir un nuevo registro rápido
     document.getElementById("producto").value = "";
     document.getElementById("precio").value = "";
     document.getElementById("stock").value = "";
+    document.getElementById("umbral").value = "";
     document.getElementById("imagen").value = "";
     document.getElementById("descripcion").value = "";
+
+    mostrarExito("Producto agregado correctamente.");
 }
 
 //Escucha los clics dentro de la tabla de productos para capturar la fila seleccionada
@@ -292,10 +328,26 @@ document.getElementById("producto").addEventListener("input", function () {
 
 document.getElementById("precio").addEventListener("input", function () {
     this.value = this.value.replace(/[^0-9]/g, "");
+
+    if (this.value.length > 1) {
+        this.value = this.value.replace(/^0+/, "");
+    }
 });
 
 document.getElementById("stock").addEventListener("input", function () {
     this.value = this.value.replace(/[^0-9]/g, "");
+
+    if (this.value.length > 1) {
+        this.value = this.value.replace(/^0+/, "");
+    }
+});
+
+document.getElementById("umbral").addEventListener("input", function () {
+    this.value = this.value.replace(/[^0-9]/g, "");
+
+    if (this.value.length > 1) {
+        this.value = this.value.replace(/^0+/, "");
+    }
 });
 
 document.getElementById("tablaProductos").addEventListener("click", function (e) {
@@ -311,32 +363,35 @@ document.getElementById("tablaProductos").addEventListener("click", function (e)
     //EN MODO EDICIÓN
     //Si el modo edición está encendido, carga los datos de esa fila en el formulario
     if(modoEditar){
-    if (!fila || fila.rowIndex === 0) {
-        return;
-    }
+        if (!fila || fila.rowIndex === 0) {
+            return;
+        }
 
-    if (modoEditar) {
+        if (modoEditar) {
 
-        //Guarda la fila clickeada en la variable global para saber cuál vamos a actualizar después
-        filaSeleccionada = fila;
+            //Guarda la fila clickeada en la variable global para saber cuál vamos a actualizar después
+            filaSeleccionada = fila;
 
-        //Pasa el nombre del producto desde la celda 1 al campo de texto del formulario
-        document.getElementById("producto").value = fila.cells[1].textContent;
+            //Pasa el nombre del producto desde la celda 1 al campo de texto del formulario
+            document.getElementById("producto").value = fila.cells[1].textContent;
 
-        //Pasa el precio quitando el símbolo "$" para dejar solo el número puro
-        document.getElementById("precio").value = fila.cells[2].textContent.replace("$","");
+            //Pasa el precio quitando el símbolo "$" para dejar solo el número puro
+            document.getElementById("precio").value = fila.cells[2].textContent.replace("$","");
 
-        //Pasa la cantidad de stock disponible al formulario
-        document.getElementById("stock").value = fila.cells[3].textContent;
+            //Pasa la cantidad de stock disponible al formulario
+            document.getElementById("stock").value = fila.cells[3].textContent;
 
-        //Pasa la descripción; si dice "Sin descripción" borra el campo, si no, copia el texto real
-        document.getElementById("descripcion").value =
-            fila.cells[5].textContent === "Sin descripción"
-            ? ""
-            : fila.cells[5].textContent;
+            document.getElementById("umbral").value = fila.cells[4].textContent;
 
-        //Cambia el texto del botón principal para indicar que ahora guardará cambios en vez de crear
-        document.getElementById("btnAgregar").textContent = "Guardar cambios";
+            //Pasa la descripción; si dice "Sin descripción" borra el campo, si no, copia el texto real
+            document.getElementById("descripcion").value =
+                fila.cells[6].textContent === "Sin descripción"
+                ? ""
+                : fila.cells[6].textContent;
+
+            //Cambia el texto del botón principal para indicar que ahora guardará cambios en vez de crear
+            document.getElementById("btnAgregar").textContent = "Guardar cambios";
+        }
     }
 
     //EN MODO ELIMINACIÓN
@@ -352,16 +407,18 @@ document.getElementById("tablaProductos").addEventListener("click", function (e)
 
         //Configura la acción que ocurrirá si el usuario presiona el botón "Sí"
         document.getElementById('btnSi').onclick = function() {
-            fila.remove(); //Borra físicamente la fila seleccionada de la tabla HTML
-            actualizarNumeros(); //Recalcula la numeración (1, 2, 3...) de todas las filas restantes
-            mostrarExito("Producto eliminado correctamente."); //Muestra un mensaje verde de éxito
-            alerta.classList.replace('d-flex', 'd-none'); //Esconde la alerta cambiando sus clases visuales
+            fila.remove();
+            actualizarNumeros();
+            mostrarExito("Producto eliminado correctamente.");
+            alerta.classList.replace('d-flex', 'd-none');
         };
 
         //Configura la acción que ocurrirá si el usuario presiona el botón "No"
         document.getElementById('btnNo').onclick = function() {
-            alerta.classList.replace('d-flex', 'd-none'); //Cierra la alerta sin borrar nada
+            alerta.classList.replace('d-flex', 'd-none');
         };
-     }
     }
 });
+
+//Comprueba los productos que ya estaban escritos en la tabla al cargar la página
+comprobarTodosLosStocks();

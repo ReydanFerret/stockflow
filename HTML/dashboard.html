@@ -93,6 +93,14 @@
             inputmode="numeric"
             maxlength="8">
 
+        <input
+            type="text"
+            class="form-control p-2 fs-6"
+            id="umbral"
+            placeholder="Umbral mínimo"
+            inputmode="numeric"
+            maxlength="8">
+
         <input type="file" class="form-control p-2 fs-6" id="imagen" accept="image/*">
 
         <textarea
@@ -116,6 +124,7 @@
                         <th class="p-3">Producto</th>
                         <th class="p-3">Precio</th>
                         <th class="p-3">Stock</th>
+                        <th class="p-3">Umbral mínimo</th>
                         <th class="p-3">Imagen</th>
                         <th class="p-3">Descripción</th>
                     </tr>
@@ -127,6 +136,7 @@
                         <td>Mouse Gamer</td>
                         <td>$25</td>
                         <td>15</td>
+                        <td>10</td>
                         <td><img src="/img/productos/mouse_gamer.jpg" alt="Mouse gamer" class="img-fluid"></td>
                         <td>Sin descripción</td>
                     </tr>
@@ -135,11 +145,14 @@
                         <td>2</td>
                         <td>Teclado Mecánico</td>
                         <td>$60</td>
-                        <td>8</td>
+                        <td>6</td>
+                        <td>10</td>
                         <td>Sin imagen</td>
-                        <td>Teclado mecánico de tamaño completo (104 teclas), dimensiones aproximadas 
-                        de 44,5 x 14 x 3 cm, color negro, conexión USB, diseño ergonómico, ideal para trabajo, 
-                        estudio y videojuegos</td>
+                        <td>
+                            Teclado mecánico de tamaño completo (104 teclas), dimensiones aproximadas 
+                            de 44,5 x 14 x 3 cm, color negro, conexión USB, diseño ergonómico, ideal para trabajo, 
+                            estudio y videojuegos
+                        </td>
                     </tr>
 
                     <tr>
@@ -147,12 +160,13 @@
                         <td>Auriculares</td>
                         <td>$40</td>
                         <td>12</td>
+                        <td>10</td>
                         <td><img src="/img/productos/auriculares.jpg" alt="Auriculares" class="img-fluid"></td>
                         <td>Auriculares inalámbricos marca JBL. Duración de batería de 4 a 6 horas, carga rápida.</td>
                     </tr>
                 </tbody>
             </table>
-        </div> .
+        </div>
     </div>
 
     <footer class="d-flex text-black p-3 justify-content-center">
