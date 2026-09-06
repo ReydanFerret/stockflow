@@ -37,9 +37,9 @@ function buscarProducto() {
 
     //Empieza en i=1 para saltar la fila de encabezado
     for (let i = 1; i < filas.length; i++) {
-        let producto = filas[i].cells[1].textContent.toLowerCase();
-        let precio = filas[i].cells[2].textContent.toLowerCase();
-        let stock = filas[i].cells[3].textContent.toLowerCase();
+        let producto = filas[i].cells[0].textContent.toLowerCase();
+        let precio = filas[i].cells[1].textContent.toLowerCase();
+        let stock = filas[i].cells[2].textContent.toLowerCase();
 
         //Si el filtro coincide con alguno de los tres campos, se muestra la fila;
         //si no coincide con ninguno, se oculta
@@ -54,13 +54,13 @@ function buscarProducto() {
 //Funcion para comprobar si el stock está por debajo del umbral mínimo
 function comprobarStock(fila) {
 
-    let stock = Number(fila.cells[3].textContent);
-    let umbral = Number(fila.cells[4].textContent);
+    let stock = Number(fila.cells[2].textContent);
+    let umbral = Number(fila.cells[3].textContent);
 
     if (stock < umbral) {
-        fila.cells[3].style.backgroundColor = "#fdea7b";
+        fila.cells[2].classList.add("stock-bajo");
     } else {
-        fila.cells[3].style.backgroundColor = "";
+        fila.cells[2].classList.remove("stock-bajo");
     }
 }
 
@@ -113,7 +113,7 @@ function guardarValoresOriginalesStock() {
     let filas = tabla.getElementsByTagName("tr");
 
     for (let i = 1; i < filas.length; i++) {
-        let stock = filas[i].cells[3].textContent;
+        let stock = filas[i].cells[2].textContent;
         valoresOriginalesStock.push(stock);
     }
 }
@@ -137,35 +137,35 @@ function convertirCeldasAStockEditables() {
     for (let i = 1; i < filas.length; i++) {
         let fila = filas[i];
 
-        //Columna 1: nombre del producto se fija como texto (no editable)
-        let producto = fila.cells[1].textContent;
-        fila.cells[1].innerHTML = `<span class="texto-fijo">${producto}</span>`;
+        //Columna 0: nombre del producto se fija como texto (no editable)
+        let producto = fila.cells[0].textContent;
+        fila.cells[0].innerHTML = `<span class="texto-fijo">${producto}</span>`;
 
-        //Columna 2: precio se fija como texto (no editable)
-        let precio = fila.cells[2].textContent;
-        fila.cells[2].innerHTML = `<span class="texto-fijo">${precio}</span>`;
+        //Columna 1: precio se fija como texto (no editable)
+        let precio = fila.cells[1].textContent;
+        fila.cells[1].innerHTML = `<span class="texto-fijo">${precio}</span>`;
 
-        //Columna 3: stock se convierte en un input editable
-        let stockActual = fila.cells[3].textContent;
-        fila.cells[3].style.backgroundColor = "";
-        fila.cells[3].innerHTML = `<input type="text" value="${stockActual}" class="stock-input" style="border: 2px solid #28a745; border-radius: 4px; padding: 4px 8px; width: 80px; text-align: center; font-size: 16px; background-color: white;">`;
+        //Columna 2: stock se convierte en un input editable
+        let stockActual = fila.cells[2].textContent;
+        fila.cells[2].style.backgroundColor = "";
+        fila.cells[2].innerHTML = `<input type="text" value="${stockActual}" class="stock-input" style="border: 2px solid #28a745; border-radius: 4px; padding: 4px 8px; width: 80px; text-align: center; font-size: 16px; background-color: white;">`;
 
-        //Columna 4: umbral mínimo se fija como texto
-        let umbral = fila.cells[4].textContent;
-        fila.cells[4].innerHTML = `<span class="texto-fijo">${umbral}</span>`;
+        //Columna 3: umbral mínimo se fija como texto
+        let umbral = fila.cells[3].textContent;
+        fila.cells[3].innerHTML = `<span class="texto-fijo">${umbral}</span>`;
 
-        //Columna 5: imagen (o texto si no hay imagen) se fija, distinguiendo
+        //Columna 4: imagen (o texto si no hay imagen) se fija, distinguiendo
         //si contiene una etiqueta <img> para mantener el HTML de la imagen intacto
-        let imagenHtml = fila.cells[5].innerHTML;
+        let imagenHtml = fila.cells[4].innerHTML;
         if (imagenHtml.includes('<img')) {
-            fila.cells[5].innerHTML = `<span class="texto-fijo-imagen">${imagenHtml}</span>`;
+            fila.cells[4].innerHTML = `<span class="texto-fijo-imagen">${imagenHtml}</span>`;
         } else {
-            fila.cells[5].innerHTML = `<span class="texto-fijo">${fila.cells[5].textContent}</span>`;
+            fila.cells[4].innerHTML = `<span class="texto-fijo">${fila.cells[5].textContent}</span>`;
         }
 
-        //Columna 6: descripción se fija como texto (no editable)
-        let descripcion = fila.cells[6].textContent;
-        fila.cells[6].innerHTML = `<span class="texto-fijo">${descripcion}</span>`;
+        //Columna 5: descripción se fija como texto (no editable)
+        let descripcion = fila.cells[5].textContent;
+        fila.cells[5].innerHTML = `<span class="texto-fijo">${descripcion}</span>`;
     }
 
     //Agrega los eventos de validación a todos los inputs de stock recién creados
@@ -252,56 +252,56 @@ function restaurarCeldasTexto(guardarCambios) {
         let fila = filas[i];
 
         //Restaura el nombre del producto desde el span.texto-fijo
-        let productoSpan = fila.cells[1].querySelector('.texto-fijo');
+        let productoSpan = fila.cells[0].querySelector('.texto-fijo');
         if (productoSpan) {
-            fila.cells[1].textContent = productoSpan.textContent;
+            fila.cells[0].textContent = productoSpan.textContent;
         }
 
         //Restaura el precio desde el span.texto-fijo
-        let precioSpan = fila.cells[2].querySelector('.texto-fijo');
+        let precioSpan = fila.cells[1].querySelector('.texto-fijo');
         if (precioSpan) {
-            fila.cells[2].textContent = precioSpan.textContent;
+            fila.cells[1].textContent = precioSpan.textContent;
         }
 
         //Restaura el stock: toma el valor del input y decide si usar
         //el nuevo valor ingresado o el valor original
-        let stockInput = fila.cells[3].querySelector('input');
+        let stockInput = fila.cells[2].querySelector('input');
         if (stockInput) {
             if (guardarCambios) {
                 let nuevoStock = parseInt(stockInput.value);
 
                 if (!isNaN(nuevoStock) && nuevoStock >= 0) {
-                    fila.cells[3].textContent = nuevoStock;
+                    fila.cells[2].textContent = nuevoStock;
                 } else {
-                    fila.cells[3].textContent = 0;
+                    fila.cells[2].textContent = 0;
                 }
             } else {
-                fila.cells[3].textContent = valoresOriginalesStock[i - 1];
+                fila.cells[2].textContent = valoresOriginalesStock[i - 1];
             }
         }
 
         //Restaura el umbral mínimo desde el span.texto-fijo
-        let umbralSpan = fila.cells[4].querySelector('.texto-fijo');
+        let umbralSpan = fila.cells[3].querySelector('.texto-fijo');
         if (umbralSpan) {
-            fila.cells[4].textContent = umbralSpan.textContent;
+            fila.cells[3].textContent = umbralSpan.textContent;
         }
 
         //Restaura la columna de imagen: si había una imagen, recupera su HTML;
         //si era solo texto, recupera el texto
-        let imagenSpan = fila.cells[5].querySelector('.texto-fijo-imagen');
+        let imagenSpan = fila.cells[4].querySelector('.texto-fijo-imagen');
         if (imagenSpan) {
-            fila.cells[5].innerHTML = imagenSpan.innerHTML;
+            fila.cells[4].innerHTML = imagenSpan.innerHTML;
         } else {
-            let imagenSpanTexto = fila.cells[5].querySelector('.texto-fijo');
+            let imagenSpanTexto = fila.cells[4].querySelector('.texto-fijo');
             if (imagenSpanTexto) {
-                fila.cells[5].textContent = imagenSpanTexto.textContent;
+                fila.cells[4].textContent = imagenSpanTexto.textContent;
             }
         }
 
         //Restaura la descripción desde el span.texto-fijo
-        let descripcionSpan = fila.cells[6].querySelector('.texto-fijo');
+        let descripcionSpan = fila.cells[5].querySelector('.texto-fijo');
         if (descripcionSpan) {
-            fila.cells[6].textContent = descripcionSpan.textContent;
+            fila.cells[5].textContent = descripcionSpan.textContent;
         }
     }
 }
@@ -316,13 +316,13 @@ function guardarCambiosStock() {
 
     for (let i = 1; i < filas.length; i++) {
         let fila = filas[i];
-        let stockInput = fila.cells[3].querySelector('input');
+        let stockInput = fila.cells[2].querySelector('input');
 
         if (stockInput) {
             let nuevoStock = parseInt(stockInput.value);
 
             if (!isNaN(nuevoStock) && nuevoStock >= 0) {
-                fila.cells[3].textContent = nuevoStock;
+                fila.cells[2].textContent = nuevoStock;
             }
         }
     }

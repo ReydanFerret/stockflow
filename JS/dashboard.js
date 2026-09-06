@@ -1,5 +1,4 @@
 //Declaracion de variables
-let contador = 4;
 let modoEditar = false;
 let modoEliminar = false;
 let filaSeleccionada = null;
@@ -44,13 +43,13 @@ function mostrarAdvertencia(mensaje) {
 //Funcion para comprobar si el stock está por debajo del umbral mínimo
 function comprobarStock(fila) {
 
-    let stock = Number(fila.cells[3].textContent);
-    let umbral = Number(fila.cells[4].textContent);
+    let stock = Number(fila.cells[2].textContent);
+    let umbral = Number(fila.cells[3].textContent);
 
     if (stock < umbral) {
-        fila.cells[3].style.backgroundColor = "#fdea7b";
+        fila.cells[2].classList.add("stock-bajo");
     } else {
-        fila.cells[3].style.backgroundColor = "";
+        fila.cells[2].classList.remove("stock-bajo");
     }
 }
 
@@ -76,9 +75,9 @@ function buscarProducto(){
     //y el stock en la celda 3, todo esto saltandose la primera fila porque es el encabezado de la tabla
     //ademas obtiene el contenido de las filas y lo pasa a minusculas
     for(let i = 1; i < filas.length; i++){
-        let producto = filas[i].cells[1].textContent.toLowerCase();
-        let precio = filas[i].cells[2].textContent.toLowerCase();
-        let stock = filas[i].cells[3].textContent.toLowerCase();
+        let producto = filas[i].cells[0].textContent.toLowerCase();
+        let precio = filas[i].cells[1].textContent.toLowerCase();
+        let stock = filas[i].cells[2].textContent.toLowerCase();
 
         //Compara si el texto del buscador está incluido en el producto, precio o stock.
         //si hay coincidencia muestra la fila, si no hay coincidencia la oculta de la pantalla.
@@ -181,23 +180,6 @@ function activarModoEliminar(){
     filaSeleccionada = null;
 }
 
-//Función para recalcular y actualizar la numeración de las filas en la tabla
-function actualizarNumeros(){
-
-    //Obtiene todas las filas de la tabla de productos, incluyendo el encabezado
-    let filas = document.getElementById("tablaProductos").rows;
-
-    //Recorre las filas una a una empezando desde la 1 para no tocar el encabezado
-    for(let i = 1; i < filas.length; i++){
-
-        //Asigna el número de la posición actual (i) como texto en la primera celda (columna 0)
-        filas[i].cells[0].textContent = i;
-    }
-    
-    //Actualiza el contador global con el total de filas para llevar el control del próximo numero de producto
-    contador = filas.length;
-}
-
 //Función para registrar un nuevo producto en la tabla o guardar los cambios del modo edición
 function agregarProducto() {
 
@@ -235,16 +217,16 @@ function agregarProducto() {
     if(modoEditar && filaSeleccionada){
 
         //Actualiza el texto de las celdas con la nueva información del formulario
-        filaSeleccionada.cells[1].textContent = producto;
-        filaSeleccionada.cells[2].textContent = "$" + precio;
-        filaSeleccionada.cells[3].textContent = stock;
-        filaSeleccionada.cells[4].textContent = umbral;
-        filaSeleccionada.cells[6].textContent = descripcion || "Sin descripción";
+        filaSeleccionada.cells[0].textContent = producto;
+        filaSeleccionada.cells[1].textContent = "$" + precio;
+        filaSeleccionada.cells[2].textContent = stock;
+        filaSeleccionada.cells[3].textContent = umbral;
+        filaSeleccionada.cells[5].textContent = descripcion || "Sin descripción";
 
         //Si el usuario subió una nueva imagen durante la edición, reemplaza la anterior
         if(imagen){
             let url = URL.createObjectURL(imagen);
-            filaSeleccionada.cells[5].innerHTML = `<img src="${url}" width="80" alt="Imagen del producto">`;
+            filaSeleccionada.cells[4].innerHTML = `<img src="${url}" width="80" alt="Imagen del producto">`;
         }
 
         comprobarStock(filaSeleccionada);
@@ -279,14 +261,13 @@ function agregarProducto() {
     let fila = tabla.insertRow();
 
     //Inserta y rellena las primeras celdas
-    fila.insertCell(0).innerHTML = contador++;
-    fila.insertCell(1).innerHTML = producto;
-    fila.insertCell(2).innerHTML = "$" + precio;
-    fila.insertCell(3).innerHTML = stock;
-    fila.insertCell(4).innerHTML = umbral;
+    fila.insertCell(0).innerHTML = producto;
+    fila.insertCell(1).innerHTML = "$" + precio;
+    fila.insertCell(2).innerHTML = stock;
+    fila.insertCell(3).innerHTML = umbral;
 
     //Crea la celda destinada a la imagen del producto
-    let celdaImagen = fila.insertCell(5);
+    let celdaImagen = fila.insertCell(4);
 
     //Si se seleccionó una imagen, crea su URL temporal y la dibuja dentro de la celda
     if (imagen) {
@@ -298,7 +279,7 @@ function agregarProducto() {
     }
 
     //Inserta la celda de descripción asignando un texto alternativo si quedó vacía
-    fila.insertCell(6).innerHTML = descripcion || "Sin descripción";
+    fila.insertCell(5).innerHTML = descripcion || "Sin descripción";
 
     comprobarStock(fila);
 
@@ -373,21 +354,21 @@ document.getElementById("tablaProductos").addEventListener("click", function (e)
             filaSeleccionada = fila;
 
             //Pasa el nombre del producto desde la celda 1 al campo de texto del formulario
-            document.getElementById("producto").value = fila.cells[1].textContent;
+            document.getElementById("producto").value = fila.cells[0].textContent;
 
             //Pasa el precio quitando el símbolo "$" para dejar solo el número puro
-            document.getElementById("precio").value = fila.cells[2].textContent.replace("$","");
+            document.getElementById("precio").value = fila.cells[1].textContent.replace("$","");
 
             //Pasa la cantidad de stock disponible al formulario
-            document.getElementById("stock").value = fila.cells[3].textContent;
+            document.getElementById("stock").value = fila.cells[2].textContent;
 
-            document.getElementById("umbral").value = fila.cells[4].textContent;
+            document.getElementById("umbral").value = fila.cells[3].textContent;
 
             //Pasa la descripción; si dice "Sin descripción" borra el campo, si no, copia el texto real
             document.getElementById("descripcion").value =
-                fila.cells[6].textContent === "Sin descripción"
+                fila.cells[5].textContent === "Sin descripción"
                 ? ""
-                : fila.cells[6].textContent;
+                : fila.cells[5].textContent;
 
             //Cambia el texto del botón principal para indicar que ahora guardará cambios en vez de crear
             document.getElementById("btnAgregar").textContent = "Guardar cambios";
