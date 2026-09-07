@@ -1,120 +1,207 @@
 :root{
+
     --color-primario:#8dd0fd;
+
     --color-secundario:#84b2fd;
+
     --color-terciario:#4b92d4;
+
     --azul-tabla:#1f4e8c;
+
 }
 
 *{
+
     box-sizing:border-box;
+
 }
 
 body{
+
     background-color:var(--color-primario);
+
     color:black;
+
     font-family:"Roboto Condensed",sans-serif;
+
 }
 
 header{
+
     background-color:var(--color-terciario);
+
 }
 
 form{
+
     background-color: var(--color-secundario);
+
 }
 
 h2{
+
     background:#6399f0;
+
     width:fit-content;
+
     max-width:100%;
+
     border-radius:12px;
+
 }
 
 footer{
+
     background-color:var(--color-terciario);
+
 }
 
 #alertaEliminar, #contenedorAlertas{
+
     width:fit-content;
+
     justify-self: center;
+
 }
 
 #buscarProducto{
+
     border-radius:8px;
+
     border:1px solid black;
+
 }
 
 .agregar-producto input,
+
 .agregar-producto textarea,
+
 .agregar-producto select{
+
     width:280px;
+
     border-radius:8px;
+
     border:1px solid black;
+
 }
 
 .btn-primary{
+
     background:var(--color-terciario);
+
     width:fit-content;
+
     border:1px solid black;
+
 }
 
 .btn-primary:hover{
+
     background:var(--color-secundario);
+
 }
 
 #btnEditar{
+
     background:var(--color-secundario);
+
     border:1px solid black;
+
 }
 
 #btnEditar:hover{
+
     background:var(--color-terciario);
+
 }
 
 #btnEliminar{
+
     background:#d32f2f;
+
     border:1px solid black;
+
 }
 
 #btnEliminar:hover{
+
     background:#b71c1c;
+
 }
 
 .table{
+
     margin-bottom:0;
+
 }
 
 .table thead th{
+
     background:var(--azul-tabla);
+
     color:white;
+
     border:1px solid black;
+
     text-align:center;
+
     vertical-align:middle;
+
 }
 
 .table tbody td{
+
     background:var(--color-secundario);
+
     border:1px solid black;
+
     vertical-align:middle;
+
 }
 
 .table tbody tr:hover td{
+
     background:#a1ccff;
+
     transition:.2s;
+
 }
 
 .table img{
+
     width:80px;
+
     height:80px;
+
     object-fit:cover;
+
 }
 
 .modo-edicion tr:hover td{
+
     background:#c9e4ff !important;
+
     cursor:pointer;
+
 }
 
 .modo-eliminar tr:hover td{
+
     background:#ffb3b3 !important;
+
     cursor:pointer;
+
+}
+
+.stock-bajo{
+
+    background-color:#fdea7b !important;
+
+}
+
+.fila-oculta{
+
+    display:none;
+
 }
