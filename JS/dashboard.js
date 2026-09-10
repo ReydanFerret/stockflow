@@ -3,7 +3,6 @@ let modoEditar = false;
 let modoEliminar = false;
 let filaSeleccionada = null;
 
-let contadorPersonal = 1;
 let modoEliminarPersonal = false;
 let filasPersonalSeleccionadas = [];
 
@@ -636,23 +635,20 @@ function agregarPersonal() {
 
 
     //Agrega los datos a la tabla
-    fila.insertCell(0).innerHTML =
-        contadorPersonal++;
+    fila.insertCell(0).innerHTML = nombre;
 
-    fila.insertCell(1).innerHTML = nombre;
+    fila.insertCell(1).innerHTML = apellido;
 
-    fila.insertCell(2).innerHTML = apellido;
+    fila.insertCell(2).innerHTML = cedula;
 
-    fila.insertCell(3).innerHTML = cedula;
+    fila.insertCell(3).innerHTML = correo;
 
-    fila.insertCell(4).innerHTML = correo;
-
-    fila.insertCell(5).innerHTML =
+    fila.insertCell(4).innerHTML =
         telefono || "Sin teléfono";
 
-    fila.insertCell(6).innerHTML = rol;
+    fila.insertCell(5).innerHTML = rol;
 
-    fila.insertCell(7).innerHTML = estado;
+    fila.insertCell(6).innerHTML = estado;
 
 
     limpiarFormularioPersonal();
@@ -742,7 +738,7 @@ function construirListaNombres(filas) {
     let nombres =
         filas.map(function(fila) {
 
-        return fila.cells[1].textContent.trim() + " " + fila.cells[2].textContent.trim();
+        return fila.cells[0].textContent.trim() + " " + fila.cells[1].textContent.trim();
 
         });
 
@@ -833,10 +829,6 @@ function eliminarPersonalSeleccionado() {
     });
 
 
-    //Actualizar numeración
-    actualizarNumerosPersonal();
-
-
     //Limpiar selección
     filasPersonalSeleccionadas = [];
 
@@ -875,27 +867,6 @@ function cancelarEliminacionPersonal() {
         "d-flex",
         "d-none"
     );
-
-}
-
-
-//Función para recalcular la numeración del personal
-function actualizarNumerosPersonal() {
-
-    let filas =
-        document.getElementById("tablaPersonal").rows;
-
-
-    for (let i = 1; i < filas.length; i++) {
-
-        filas[i].cells[0].textContent =
-            i;
-
-    }
-
-
-    contadorPersonal =
-        filas.length;
 
 }
 
