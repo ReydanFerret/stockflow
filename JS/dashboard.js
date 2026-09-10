@@ -403,7 +403,9 @@ function volverAProductos() {
 //Función para limpiar el formulario de personal
 function limpiarFormularioPersonal() {
 
-    document.getElementById("nombreCompletoPersonal").value = "";
+    document.getElementById("nombrePersonal").value = "";
+
+    document.getElementById("apellidoPersonal").value = "";
 
     document.getElementById("usuarioPersonal").value = "";
 
@@ -423,8 +425,11 @@ function limpiarFormularioPersonal() {
 //Función para agregar un nuevo integrante del personal
 function agregarPersonal() {
 
-    let nombreCompleto =
-        document.getElementById("nombreCompletoPersonal").value.trim();
+    let nombre =
+        document.getElementById("nombrePersonal").value.trim();
+
+    let apellido =
+        document.getElementById("apellidoPersonal").value.trim();
 
     let cedula =
         document.getElementById("usuarioPersonal").value.trim();
@@ -445,9 +450,9 @@ function agregarPersonal() {
         document.getElementById("estadoPersonal").value;
 
 
-    //Comprueba que los campos obligatorios estén completos
     if (
-        nombreCompleto === "" ||
+        nombre === "" ||
+        apellido === "" ||
         cedula === "" ||
         correo === "" ||
         contrasena === "" ||
@@ -455,7 +460,7 @@ function agregarPersonal() {
     ) {
 
         mostrarError(
-            "Nombre Completo, Cédula de identidad, Correo, Contraseña y Rol no pueden estar vacíos."
+            "Nombre, Apellido, Cédula de identidad, Correo, Contraseña y Rol no pueden estar vacíos."
         );
 
         return;
@@ -463,7 +468,6 @@ function agregarPersonal() {
     }
 
 
-    //Comprueba que la cédula contenga solamente números
     if (!/^[0-9]+$/.test(cedula)) {
 
         mostrarError(
@@ -475,7 +479,6 @@ function agregarPersonal() {
     }
 
 
-    //Comprueba que el correo tenga un formato válido
     if (!correo.includes("@") || !correo.includes(".")) {
 
         mostrarError(
@@ -487,7 +490,6 @@ function agregarPersonal() {
     }
 
 
-    //Comprueba que la contraseña tenga una longitud mínima
     if (contrasena.length < 6) {
 
         mostrarError(
@@ -499,39 +501,34 @@ function agregarPersonal() {
     }
 
 
-    //Obtiene la tabla de personal
     let tabla = document.getElementById("tablaPersonal");
 
-    //Obtiene directamente el cuerpo de la tabla
     let cuerpoTabla = tabla.querySelector("tbody");
 
-
-    //Crea una nueva fila dentro del tbody
     let fila = cuerpoTabla.insertRow();
 
 
-    //Agrega los datos a la tabla
     fila.insertCell(0).innerHTML = contadorPersonal++;
 
-    fila.insertCell(1).innerHTML = nombreCompleto;
+    fila.insertCell(1).innerHTML = nombre;
 
-    fila.insertCell(2).innerHTML = cedula;
+    fila.insertCell(2).innerHTML = apellido;
 
-    fila.insertCell(3).innerHTML = correo;
+    fila.insertCell(3).innerHTML = cedula;
 
-    fila.insertCell(4).innerHTML =
+    fila.insertCell(4).innerHTML = correo;
+
+    fila.insertCell(5).innerHTML =
         telefono || "Sin teléfono";
 
-    fila.insertCell(5).innerHTML = rol;
+    fila.insertCell(6).innerHTML = rol;
 
-    fila.insertCell(6).innerHTML = estado;
+    fila.insertCell(7).innerHTML = estado;
 
 
-    //Limpia el formulario
     limpiarFormularioPersonal();
 
 
-    //Muestra mensaje de éxito
     mostrarExitoPersonal(
         "Personal agregado correctamente."
     );
@@ -615,7 +612,7 @@ function construirListaNombres(filas){
 
     let nombres = filas.map(function(fila){
 
-        return fila.cells[1].textContent.trim();
+        return fila.cells[1].textContent.trim() + " " + fila.cells[2].textContent.trim();
 
     });
 
@@ -907,8 +904,22 @@ document.getElementById("telefonoPersonal").addEventListener(
 );
 
 
-//Validación del nombre completo del personal
-document.getElementById("nombreCompletoPersonal").addEventListener(
+//Validación del nombre del personal
+document.getElementById("nombrePersonal").addEventListener(
+    "input",
+    function () {
+
+        this.value = this.value.replace(
+            /[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g,
+            ""
+        );
+
+    }
+);
+
+
+//Validación del apellido del personal
+document.getElementById("apellidoPersonal").addEventListener(
     "input",
     function () {
 
