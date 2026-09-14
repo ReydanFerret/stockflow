@@ -1,5 +1,4 @@
 //Declaracion de variables
-let contador = 4;
 let modoEditar = false;
 let modoEliminar = false;
 let filaSeleccionada = null;
@@ -39,7 +38,6 @@ function mostrarError(mensaje) {
 
     let contenedor;
 
-    //Si estamos en la sección de personal, muestra el error allí
     if (!document.getElementById("seccionPersonal").classList.contains("d-none")) {
 
         contenedor =
@@ -138,19 +136,19 @@ function mostrarAdvertencia(mensaje) {
 function comprobarStock(fila) {
 
     let stock =
-        Number(fila.cells[3].textContent);
+        Number(fila.cells[2].textContent);
 
     let umbral =
-        Number(fila.cells[4].textContent);
+        Number(fila.cells[3].textContent);
 
 
     if (stock < umbral) {
 
-        fila.cells[3].classList.add("stock-bajo");
+        fila.cells[2].classList.add("stock-bajo");
 
     } else {
 
-        fila.cells[3].classList.remove("stock-bajo");
+        fila.cells[2].classList.remove("stock-bajo");
 
     }
 
@@ -191,13 +189,13 @@ function buscarProducto() {
     for (let i = 1; i < filas.length; i++) {
 
         let producto =
-            filas[i].cells[1].textContent.toLowerCase();
+            filas[i].cells[0].textContent.toLowerCase();
 
         let precio =
-            filas[i].cells[2].textContent.toLowerCase();
+            filas[i].cells[1].textContent.toLowerCase();
 
         let stock =
-            filas[i].cells[3].textContent.toLowerCase();
+            filas[i].cells[2].textContent.toLowerCase();
 
 
         if (
@@ -315,25 +313,6 @@ function activarModoEliminar() {
 }
 
 
-//Función para recalcular y actualizar la numeración de las filas
-function actualizarNumeros() {
-
-    let filas =
-        document.getElementById("tablaProductos").rows;
-
-
-    for (let i = 1; i < filas.length; i++) {
-
-        filas[i].cells[0].textContent = i;
-
-    }
-
-
-    contador = filas.length;
-
-}
-
-
 //Función para registrar un nuevo producto o guardar cambios
 function agregarProducto() {
 
@@ -404,19 +383,19 @@ function agregarProducto() {
 
     if (modoEditar && filaSeleccionada) {
 
-        filaSeleccionada.cells[1].textContent =
+        filaSeleccionada.cells[0].textContent =
             producto;
 
-        filaSeleccionada.cells[2].textContent =
+        filaSeleccionada.cells[1].textContent =
             "$" + precio;
 
-        filaSeleccionada.cells[3].textContent =
+        filaSeleccionada.cells[2].textContent =
             stock;
 
-        filaSeleccionada.cells[4].textContent =
+        filaSeleccionada.cells[3].textContent =
             umbral;
 
-        filaSeleccionada.cells[6].textContent =
+        filaSeleccionada.cells[5].textContent =
             descripcion || "Sin descripción";
 
 
@@ -426,7 +405,7 @@ function agregarProducto() {
                 URL.createObjectURL(imagen);
 
 
-            filaSeleccionada.cells[5].innerHTML =
+            filaSeleccionada.cells[4].innerHTML =
                 `<img src="${url}" class="img-fluid" alt="Imagen del producto">`;
 
         }
@@ -487,23 +466,20 @@ function agregarProducto() {
 
 
     fila.insertCell(0).innerHTML =
-        contador++;
-
-    fila.insertCell(1).innerHTML =
         producto;
 
-    fila.insertCell(2).innerHTML =
+    fila.insertCell(1).innerHTML =
         "$" + precio;
 
-    fila.insertCell(3).innerHTML =
+    fila.insertCell(2).innerHTML =
         stock;
 
-    fila.insertCell(4).innerHTML =
+    fila.insertCell(3).innerHTML =
         umbral;
 
 
     let celdaImagen =
-        fila.insertCell(5);
+        fila.insertCell(4);
 
 
     if (imagen) {
@@ -523,7 +499,7 @@ function agregarProducto() {
     }
 
 
-    fila.insertCell(6).innerHTML =
+    fila.insertCell(5).innerHTML =
         descripcion || "Sin descripción";
 
 
@@ -625,7 +601,6 @@ function agregarPersonal() {
         document.getElementById("estadoPersonal").value;
 
 
-    //Comprueba que los campos obligatorios estén completos
     if (
         nombreCompleto === "" ||
         cedula === "" ||
@@ -643,7 +618,6 @@ function agregarPersonal() {
     }
 
 
-    //Comprueba que la cédula contenga solamente números
     if (!/^[0-9]+$/.test(cedula)) {
 
         mostrarError(
@@ -655,7 +629,6 @@ function agregarPersonal() {
     }
 
 
-    //Comprueba que el correo tenga un formato válido
     if (
         !correo.includes("@") ||
         !correo.includes(".")
@@ -670,7 +643,6 @@ function agregarPersonal() {
     }
 
 
-    //Comprueba que la contraseña tenga una longitud mínima
     if (contrasena.length < 6) {
 
         mostrarError(
@@ -682,7 +654,6 @@ function agregarPersonal() {
     }
 
 
-    //Obtiene la tabla de personal
     let tabla =
         document.getElementById("tablaPersonal");
 
@@ -691,12 +662,10 @@ function agregarPersonal() {
         tabla.querySelector("tbody");
 
 
-    //Crea una nueva fila
     let fila =
         cuerpoTabla.insertRow();
 
 
-    //Agrega los datos a la tabla
     fila.insertCell(0).innerHTML =
         contadorPersonal++;
 
@@ -719,11 +688,9 @@ function agregarPersonal() {
         estado;
 
 
-    //Limpia el formulario
     limpiarFormularioPersonal();
 
 
-    //Muestra mensaje de éxito
     mostrarExitoPersonal(
         "Personal agregado correctamente."
     );
@@ -734,10 +701,8 @@ function agregarPersonal() {
 //Función para activar o desactivar el modo de eliminación de personal
 function activarModoEliminarPersonal() {
 
-    //Si ya estamos en modo eliminación
     if (modoEliminarPersonal) {
 
-        //Si ya hay personas seleccionadas
         if (filasPersonalSeleccionadas.length > 0) {
 
             mostrarAlertaEliminarPersonal();
@@ -747,7 +712,6 @@ function activarModoEliminarPersonal() {
         }
 
 
-        //Si no hay personas seleccionadas, se cancela el modo
         modoEliminarPersonal = false;
 
         document.getElementById("btnEliminarPersonal").textContent =
@@ -760,7 +724,6 @@ function activarModoEliminarPersonal() {
     }
 
 
-    //Activar modo eliminación
     modoEliminarPersonal = true;
 
     filasPersonalSeleccionadas = [];
@@ -779,7 +742,6 @@ function seleccionarFilaPersonal(fila) {
         filasPersonalSeleccionadas.indexOf(fila);
 
 
-    //Si ya estaba seleccionada
     if (indice !== -1) {
 
         filasPersonalSeleccionadas.splice(
@@ -794,7 +756,6 @@ function seleccionarFilaPersonal(fila) {
     }
 
 
-    //Si no estaba seleccionada
     filasPersonalSeleccionadas.push(fila);
 
     fila.classList.add("table-warning");
@@ -891,7 +852,6 @@ function eliminarPersonalSeleccionado() {
     }
 
 
-    //Eliminar todas las filas seleccionadas
     filasPersonalSeleccionadas.forEach(function(fila) {
 
         fila.remove();
@@ -899,15 +859,12 @@ function eliminarPersonalSeleccionado() {
     });
 
 
-    //Actualizar numeración
     actualizarNumerosPersonal();
 
 
-    //Limpiar selección
     filasPersonalSeleccionadas = [];
 
 
-    //Cerrar alerta
     const alerta =
         document.getElementById(
             "alertaEliminarPersonal"
@@ -920,7 +877,6 @@ function eliminarPersonalSeleccionado() {
     );
 
 
-    //Mostrar mensaje de éxito
     mostrarExitoPersonal(
         "El personal seleccionado se eliminó correctamente."
     );
@@ -1199,28 +1155,28 @@ document.getElementById("tablaProductos").addEventListener(
 
 
             document.getElementById("producto").value =
-                fila.cells[1].textContent;
+                fila.cells[0].textContent;
 
 
             document.getElementById("precio").value =
-                fila.cells[2].textContent.replace(
+                fila.cells[1].textContent.replace(
                     "$",
                     ""
                 );
 
 
             document.getElementById("stock").value =
-                fila.cells[3].textContent;
+                fila.cells[2].textContent;
 
 
             document.getElementById("umbral").value =
-                fila.cells[4].textContent;
+                fila.cells[3].textContent;
 
 
             document.getElementById("descripcion").value =
-                fila.cells[6].textContent === "Sin descripción"
+                fila.cells[5].textContent === "Sin descripción"
                 ? ""
-                : fila.cells[6].textContent;
+                : fila.cells[5].textContent;
 
 
             document.getElementById("btnAgregar").textContent =
@@ -1248,8 +1204,6 @@ document.getElementById("tablaProductos").addEventListener(
                 function() {
 
                     fila.remove();
-
-                    actualizarNumeros();
 
                     mostrarExito(
                         "Producto eliminado correctamente."
@@ -1296,7 +1250,6 @@ document.getElementById("tablaPersonal").addEventListener(
         }
 
 
-        //Si estamos en modo eliminación
         if (modoEliminarPersonal) {
 
             seleccionarFilaPersonal(fila);
@@ -1305,6 +1258,7 @@ document.getElementById("tablaPersonal").addEventListener(
 
     }
 );
+
 
 //Comprueba los productos existentes al cargar la página
 comprobarTodosLosStocks();
