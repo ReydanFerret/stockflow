@@ -1174,9 +1174,9 @@ document.getElementById("tablaProductos").addEventListener(
 
 
             document.getElementById("descripcion").value =
-                fila.cells[5].textContent === "Sin descripción"
+                fila.cells[5].textContent.trim() === "Sin descripción"
                 ? ""
-                : fila.cells[5].textContent;
+                : fila.cells[5].textContent.trim();
 
 
             document.getElementById("btnAgregar").textContent =
