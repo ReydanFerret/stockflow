@@ -57,7 +57,7 @@ async function cargarHistorialVentas() {
         datos.ventas.forEach((venta) => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
-                <td>${venta.fecha}</td>
+                <td>{new Date(venta.fecha).toLocaleDateString('es-UY')}</td>
                 <td>${venta.hora}</td>
                 <td>${venta.cantidad}</td>
                 <td>$${venta.precio_unitario}</td>
