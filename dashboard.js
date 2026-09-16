@@ -3,6 +3,9 @@ let usuarioActual = null;
 let productosCache = [];
 let modoEliminarProductos = false;
 let filaProductoAEliminar = null;
+let modoEditarProductos = false;
+let productoAEditar = null;
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     usuarioActual = await protegerPagina(["administrador"]);
@@ -70,21 +73,54 @@ function renderizarTablaProductos(productos) {
 }
 
 function inicializarEventosProductos() {
-    document.getElementById("btnAgregar").addEventListener("click", async () => {
-        const nombre = document.getElementById("producto").value.trim();
-        const precio = document.getElementById("precio").value;
-        const stock = document.getElementById("stock").value;
-        const umbral = document.getElementById("umbral").value;
-        const descripcion = document.getElementById("descripcion").value.trim();
-        // Nota: la subida de imagen (input#imagen) todavía no está
-        // conectada al backend
+document.getElementById("btnAgregar").addEventListener("click", async () => {
 
-        if (nombre === "" || precio === "" || stock === "") {
-            mostrarError("Completá al menos producto, precio y stock.");
-            return;
+    const nombre = document.getElementById("producto").value.trim();
+    const precio = document.getElementById("precio").value;
+    const stock = document.getElementById("stock").value;
+    const umbral = document.getElementById("umbral").value;
+    const descripcion = document.getElementById("descripcion").value.trim();
+
+    if (nombre === "" || precio === "" || stock === "") {
+        mostrarError("Completá al menos producto, precio y stock.");
+        return;
+    }
+
+    try {
+
+        // -------------------------------------------------------
+        // EDITAR PRODUCTO
+        // -------------------------------------------------------
+
+        if (modoEditarProductos && productoAEditar) {
+
+            await apiFetch(`/productos.php?id=${productoAEditar.id}`, {
+                method: "PATCH",
+                body: {
+                    nombre,
+                    precio: Number(precio),
+                    stock: Number(stock),
+                    umbral_minimo: Number(umbral || 0),
+                    descripcion
+                }
+            });
+
+            mostrarExito("Producto actualizado con éxito.");
+
+            productoAEditar = null;
+            modoEditarProductos = false;
+
+            document.getElementById("btnEditar").textContent = "Editar";
+            document.getElementById("tablaProductos").classList.remove("modo-editar");
+
         }
 
-        try {
+        // -------------------------------------------------------
+        // AGREGAR PRODUCTO
+        // -------------------------------------------------------
+
+        else {
+
             await apiFetch("/productos.php", {
                 method: "POST",
                 body: {
@@ -92,22 +128,68 @@ function inicializarEventosProductos() {
                     precio: Number(precio),
                     stock: Number(stock),
                     umbral_minimo: Number(umbral || 0),
-                    descripcion,
-                },
+                    descripcion
+                }
             });
 
             mostrarExito("Producto agregado con éxito.");
-            document.getElementById("producto").value = "";
-            document.getElementById("precio").value = "";
-            document.getElementById("stock").value = "";
-            document.getElementById("umbral").value = "";
-            document.getElementById("descripcion").value = "";
-
-            await cargarProductos();
-        } catch (error) {
-            mostrarError("No se pudo agregar el producto: " + error.message);
         }
-    });
+
+        // Limpiar campos
+        document.getElementById("producto").value = "";
+        document.getElementById("precio").value = "";
+        document.getElementById("stock").value = "";
+        document.getElementById("umbral").value = "";
+        document.getElementById("descripcion").value = "";
+
+        document.getElementById("btnAgregar").textContent = "Agregar Producto";
+
+        await cargarProductos();
+
+    } catch (error) {
+
+        mostrarError(
+            modoEditarProductos
+                ? "No se pudo actualizar el producto: " + error.message
+                : "No se pudo agregar el producto: " + error.message
+        );
+
+    }
+});
+
+// ---------------------------------------------------------------
+// EDITAR PRODUCTOS
+// ---------------------------------------------------------------
+
+document.getElementById("btnEditar").addEventListener("click", function () {
+
+    modoEditarProductos = !modoEditarProductos;
+
+    document.getElementById("tablaProductos").classList.toggle(
+        "modo-editar",
+        modoEditarProductos
+    );
+
+    this.textContent = modoEditarProductos ? "Cancelar" : "Editar";
+
+    if (!modoEditarProductos) {
+
+        productoAEditar = null;
+
+        document.getElementById("producto").value = "";
+        document.getElementById("precio").value = "";
+        document.getElementById("stock").value = "";
+        document.getElementById("umbral").value = "";
+        document.getElementById("descripcion").value = "";
+
+        document.getElementById("btnAgregar").textContent = "Agregar Producto";
+
+        return;
+    }
+
+    mostrarExito("Seleccioná el producto que querés editar.");
+});
+
 
     document.getElementById("buscarProducto").addEventListener("input", function () {
         const filtro = this.value.toLowerCase();
@@ -124,15 +206,57 @@ function inicializarEventosProductos() {
         this.textContent = modoEliminarProductos ? "Cancelar" : "Eliminar";
     });
 
-    document.querySelector("#tablaProductos tbody").addEventListener("click", (e) => {
-        if (!modoEliminarProductos) return;
-        const fila = e.target.closest("tr");
-        if (!fila || !fila.dataset.id) return;
+document.querySelector("#tablaProductos tbody").addEventListener("click", (e) => {
+
+    const fila = e.target.closest("tr");
+
+    if (!fila || !fila.dataset.id) return;
+
+
+    // -------------------------------------------------------
+    // MODO ELIMINAR
+    // -------------------------------------------------------
+
+    if (modoEliminarProductos) {
 
         filaProductoAEliminar = fila;
+
         document.getElementById("alertaEliminar").classList.remove("d-none");
         document.getElementById("alertaEliminar").classList.add("d-flex");
-    });
+
+        return;
+    }
+
+
+    // -------------------------------------------------------
+    // MODO EDITAR
+    // -------------------------------------------------------
+
+    if (modoEditarProductos) {
+
+        const id = fila.dataset.id;
+
+        const producto = productosCache.find(p => p.id === id);
+
+        if (!producto) {
+            mostrarError("No se encontró el producto seleccionado.");
+            return;
+        }
+
+        productoAEditar = producto;
+
+        document.getElementById("producto").value = producto.nombre;
+        document.getElementById("precio").value = producto.precio;
+        document.getElementById("stock").value = producto.stock;
+        document.getElementById("umbral").value = producto.umbral_minimo || "";
+        document.getElementById("descripcion").value = producto.descripcion || "";
+
+        document.getElementById("btnAgregar").textContent = "Guardar cambios";
+
+        mostrarExito("Producto seleccionado. Modificá los datos y guardá los cambios.");
+    }
+
+});
 
     document.getElementById("btnNo").addEventListener("click", () => {
         filaProductoAEliminar = null;
