@@ -64,11 +64,14 @@ footer{
 
 }
 
-#AlertaEliminarPersonal{
-    align-self: center;
+#alertaEliminarPersonal {
+    width: fit-content;
+    max-width: 90%;
     margin-left: auto;
     margin-right: auto;
- }
+    text-align: center;
+    padding: 15px 25px;
+}
 
 #buscarProducto{
 
