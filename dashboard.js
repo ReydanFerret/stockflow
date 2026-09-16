@@ -63,12 +63,18 @@ function renderizarTablaProductos(productos) {
         fila.innerHTML = `
             <td>${producto.nombre}</td>
             <td>$${producto.precio}</td>
-            <td>${producto.stock}</td>
+            <td class="celda-stock">${producto.stock}</td>
             <td>${producto.umbral_minimo}</td>
             <td>Sin imagen</td>
             <td>${producto.descripcion || "Sin descripción"}</td>
         `;
         tbody.appendChild(fila);
+
+        const celdaStock = fila.querySelector(".celda-stock");
+
+        if (Number(producto.stock) < Number(producto.umbral_minimo)) {
+            celdaStock.classList.add("stock-bajo");
+        }
     });
 }
 
