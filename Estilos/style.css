@@ -194,11 +194,18 @@ footer{
 
 }
 
+.producto-seleccionado td{
+
+    background:#ff9595 !important;
+
+}
+
 .stock-bajo{
 
     background-color:#fdea7b !important;
 
 }
+
 
 .fila-oculta{
 

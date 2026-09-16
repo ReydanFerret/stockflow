@@ -2,6 +2,7 @@
 let modoEditar = false;
 let modoEliminar = false;
 let filaSeleccionada = null;
+let filasProductosSeleccionadas = [];
 
 let contadorPersonal = 1;
 let modoEliminarPersonal = false;
@@ -254,6 +255,14 @@ function activarModoEditar() {
 
     modoEliminar = false;
 
+    filasProductosSeleccionadas.forEach(function(fila) {
+
+        fila.classList.remove("producto-seleccionado");
+
+    });
+
+    filasProductosSeleccionadas = [];
+
 
     document.getElementById("btnEditar").textContent =
         "Cancelar";
@@ -275,6 +284,15 @@ function activarModoEliminar() {
 
     if (modoEliminar) {
 
+        if (filasProductosSeleccionadas.length > 0) {
+
+            mostrarAlertaEliminar();
+
+            return;
+
+        }
+
+
         modoEliminar = false;
 
         document.getElementById("btnEliminar").textContent =
@@ -282,6 +300,8 @@ function activarModoEliminar() {
 
         document.getElementById("tablaProductos")
             .classList.remove("modo-eliminar");
+
+        filasProductosSeleccionadas = [];
 
         return;
 
@@ -292,9 +312,11 @@ function activarModoEliminar() {
 
     modoEditar = false;
 
+    filasProductosSeleccionadas = [];
+
 
     document.getElementById("btnEliminar").textContent =
-        "Cancelar";
+        "Confirmar eliminación";
 
     document.getElementById("btnEditar").textContent =
         "Editar";
@@ -309,6 +331,171 @@ function activarModoEliminar() {
         .classList.remove("modo-edicion");
 
     filaSeleccionada = null;
+
+}
+
+
+//Función para seleccionar o deseleccionar un producto
+function seleccionarFilaProducto(fila) {
+
+    let indice =
+        filasProductosSeleccionadas.indexOf(fila);
+
+
+    if (indice !== -1) {
+
+        filasProductosSeleccionadas.splice(
+            indice,
+            1
+        );
+
+        fila.classList.remove("producto-seleccionado");
+
+        return;
+
+    }
+
+
+    filasProductosSeleccionadas.push(fila);
+
+    fila.classList.add("producto-seleccionado");
+
+}
+
+
+//Función para construir correctamente la lista de nombres de productos
+function construirListaProductos(filas) {
+
+    let productos =
+        filas.map(function(fila) {
+
+            return fila.cells[0].textContent.trim();
+
+        });
+
+
+    if (productos.length === 1) {
+
+        return productos[0];
+
+    }
+
+
+    if (productos.length === 2) {
+
+        return productos[0] +
+            " y " +
+            productos[1];
+
+    }
+
+
+    let productosIniciales =
+        productos.slice(0, -1).join(", ");
+
+
+    let ultimoProducto =
+        productos[productos.length - 1];
+
+
+    return productosIniciales +
+        " y " +
+        ultimoProducto;
+
+}
+
+
+//Función para mostrar la alerta de confirmación de productos
+function mostrarAlertaEliminar() {
+
+    if (filasProductosSeleccionadas.length === 0) {
+
+        return;
+
+    }
+
+
+    let listaProductos =
+        construirListaProductos(
+            filasProductosSeleccionadas
+        );
+
+
+    document.querySelector(
+        "#alertaEliminar span"
+    ).innerHTML = `
+        <strong>Advertencia:</strong>
+        ¿Desea eliminar estos productos?
+        <br>
+        ${listaProductos}
+    `;
+
+
+    const alerta =
+        document.getElementById(
+            "alertaEliminar"
+        );
+
+
+    alerta.classList.remove("d-none");
+
+    alerta.classList.add("d-flex");
+
+}
+
+
+//Función para eliminar los productos seleccionados
+function eliminarProductosSeleccionados() {
+
+    if (filasProductosSeleccionadas.length === 0) {
+
+        return;
+
+    }
+
+
+    filasProductosSeleccionadas.forEach(function(fila) {
+
+        fila.remove();
+
+    });
+
+
+    filasProductosSeleccionadas = [];
+
+
+    const alerta =
+        document.getElementById(
+            "alertaEliminar"
+        );
+
+
+    alerta.classList.replace(
+        "d-flex",
+        "d-none"
+    );
+
+
+    mostrarExito(
+        "Los productos seleccionados se eliminaron correctamente."
+    );
+
+}
+
+
+//Función para cancelar la eliminación de productos
+function cancelarEliminacionProductos() {
+
+    const alerta =
+        document.getElementById(
+            "alertaEliminar"
+        );
+
+
+    alerta.classList.replace(
+        "d-flex",
+        "d-none"
+    );
 
 }
 
@@ -992,6 +1179,20 @@ document.getElementById("btnNoPersonal").addEventListener(
 );
 
 
+//Botón "Sí, eliminar" de productos
+document.getElementById("btnSi").addEventListener(
+    "click",
+    eliminarProductosSeleccionados
+);
+
+
+//Botón "Cancelar" de la alerta de productos
+document.getElementById("btnNo").addEventListener(
+    "click",
+    cancelarEliminacionProductos
+);
+
+
 //Validación del nombre del producto
 document.getElementById("producto").addEventListener(
     "input",
@@ -1189,44 +1390,7 @@ document.getElementById("tablaProductos").addEventListener(
 
         if (modoEliminar) {
 
-            const alerta =
-                document.getElementById(
-                    "alertaEliminar"
-                );
-
-
-            alerta.classList.remove("d-none");
-
-            alerta.classList.add("d-flex");
-
-
-            document.getElementById("btnSi").onclick =
-                function() {
-
-                    fila.remove();
-
-                    mostrarExito(
-                        "Producto eliminado correctamente."
-                    );
-
-
-                    alerta.classList.replace(
-                        "d-flex",
-                        "d-none"
-                    );
-
-                };
-
-
-            document.getElementById("btnNo").onclick =
-                function() {
-
-                    alerta.classList.replace(
-                        "d-flex",
-                        "d-none"
-                    );
-
-                };
+            seleccionarFilaProducto(fila);
 
         }
 
