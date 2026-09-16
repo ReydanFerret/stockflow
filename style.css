@@ -56,13 +56,19 @@ footer{
 
 }
 
-#alertaEliminar, #contenedorAlertas, #textoAlertaEliminarPersonal{
+#alertaEliminar, #contenedorAlertas{
 
     width:fit-content;
-
+    
     justify-self: center;
 
 }
+
+#AlertaEliminarPersonal{
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+ }
 
 #buscarProducto{
 
