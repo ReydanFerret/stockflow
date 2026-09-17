@@ -53,20 +53,43 @@ async function cargarProductosParaSelect() {
 async function cargarHistorialVentas() {
     try {
         const datos = await apiFetch("/ventas.php");
+        console.log(datos.ventas);
         tablaVentas.innerHTML = "";
+
         datos.ventas.forEach((venta) => {
             const fila = document.createElement("tr");
+
+            // Formatear fecha
+            let fechaFormateada = "Sin fecha";
+
+            if (venta.fecha) {
+                const fecha = new Date(venta.fecha);
+
+                if (!isNaN(fecha.getTime())) {
+                    fechaFormateada = fecha.toLocaleDateString("es-UY", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric"
+                    });
+                }
+            }
+
             fila.innerHTML = `
-                <td>${new Date(venta.fecha).toLocaleDateString('es-UY')}</td>
-                <td>${venta.hora}</td>
-                <td>${venta.cantidad}</td>
-                <td>$${venta.precio_unitario}</td>
-                <td>$${venta.precio_unitario * venta.cantidad}</td>
+                <td>${fechaFormateada}</td>
+                <td>${venta.hora || ""}</td>
+                <td>${venta.cantidad || 0}</td>
+                <td>$${venta.precio_unitario || 0}</td>
+                <td>$${(venta.precio_unitario || 0) * (venta.cantidad || 0)}</td>
             `;
+
             tablaVentas.appendChild(fila);
         });
+
     } catch (error) {
-        console.error("No se pudo cargar el historial de ventas:", error.message);
+        console.error(
+            "No se pudo cargar el historial de ventas:",
+            error
+        );
     }
 }
 
