@@ -34,8 +34,22 @@ async function cargarHistorialGastos() {
         tablaGastos.innerHTML = "";
         datos.gastos.forEach((gasto) => {
             const fila = document.createElement("tr");
+
+            // Formatear fecha (llega como "2026-09-17 00:00:00.000Z")
+            let fechaFormateada = "Sin fecha";
+            if (gasto.fecha) {
+                const fecha = new Date(gasto.fecha);
+                if (!isNaN(fecha.getTime())) {
+                    fechaFormateada = fecha.toLocaleDateString("es-UY", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric"
+                    });
+                }
+            }
+
             fila.innerHTML = `
-                <td>${gasto.fecha}</td>
+                <td>${fechaFormateada}</td>
                 <td>${gasto.hora}</td>
                 <td>${gasto.concepto}</td>
                 <td>${gasto.categoria}</td>
