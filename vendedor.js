@@ -152,11 +152,21 @@ btnRegistrarVenta.addEventListener("click", async function (e) {
         mostrarAlerta("Venta registrada con éxito.", "success");
         await cargarHistorialVentas();
 
+        // Refrescar el select para que el stock mostrado quede actualizado
+        selectProducto.innerHTML = "";
+        await cargarProductosParaSelect();
+
         selectProducto.selectedIndex = 0;
         cantidad.value = "";
         precio.value = "";
         total.value = "";
     } catch (error) {
-        mostrarAlerta("No se pudo registrar la venta: " + error.message, "danger");
+        // Si el mensaje del backend indica stock insuficiente,
+        // mostramos una advertencia (amarilla) en vez de un error genérico (rojo)
+        const esStockInsuficiente = error.message.toLowerCase().includes("stock insuficiente");
+        const tipoAlerta = esStockInsuficiente ? "warning" : "danger";
+        const prefijo = esStockInsuficiente ? "" : "No se pudo registrar la venta: ";
+
+        mostrarAlerta(prefijo + error.message, tipoAlerta);
     }
 });
