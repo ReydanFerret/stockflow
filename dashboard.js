@@ -62,7 +62,7 @@ function renderizarTablaProductos(productos) {
         fila.dataset.id = producto.id;
 
         const celdaImagen = producto.imagen
-            ? `<img src="${API_BASE}/imagen.php?id=${producto.id}" alt="${producto.nombre}" style="max-width:60px;max-height:60px;object-fit:cover;border-radius:6px;">`
+            ? `<img src="${API_BASE}/imagen.php?id=${producto.id}" alt="${producto.nombre}" style="width:100%;max-width:150px;height:100px;object-fit:cover;border-radius:6px;">`
             : "Sin imagen";
 
         fila.innerHTML = `
@@ -109,8 +109,8 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
 
             if (archivoImagen) {
                 // Con imagen nueva: se manda por POST multipart con
-                // _metodo=PATCH, porque PHP no manda $_FILES en
-                // requests PATCH
+                // _metodo=PATCH, porque PHP no puebla $_FILES en
+                // requests PATCH reales.
                 const formData = new FormData();
                 formData.append("_metodo", "PATCH");
                 formData.append("id", productoAEditar.id);

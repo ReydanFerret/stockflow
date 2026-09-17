@@ -45,7 +45,7 @@ function renderizarTabla(productos) {
         fila.dataset.id = producto.id;
 
         const celdaImagen = producto.imagen
-            ? `<img src="${API_BASE}/imagen.php?id=${producto.id}" alt="${producto.nombre}" style="max-width:60px;max-height:60px;object-fit:cover;border-radius:6px;">`
+            ? `<img src="${API_BASE}/imagen.php?id=${producto.id}" alt="${producto.nombre}" style="width:100%;max-width:150px;height:100px;object-fit:cover;border-radius:6px;">`
             : "Sin imagen";
 
         fila.innerHTML = `
