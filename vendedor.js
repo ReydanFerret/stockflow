@@ -54,6 +54,7 @@ async function cargarHistorialVentas() {
     try {
         const datos = await apiFetch("/ventas.php");
         console.log(datos.ventas);
+
         tablaVentas.innerHTML = "";
 
         datos.ventas.forEach((venta) => {
@@ -74,12 +75,24 @@ async function cargarHistorialVentas() {
                 }
             }
 
+            // Obtener nombre del producto
+            const nombreProducto =
+                venta.producto_nombre ||
+                venta.producto?.nombre ||
+                venta.producto ||
+                "Sin producto";
+
+            const cantidadVenta = Number(venta.cantidad) || 0;
+            const precioUnitario = Number(venta.precio_unitario) || 0;
+            const totalVenta = cantidadVenta * precioUnitario;
+
             fila.innerHTML = `
+                <td>${nombreProducto}</td>
                 <td>${fechaFormateada}</td>
                 <td>${venta.hora || ""}</td>
-                <td>${venta.cantidad || 0}</td>
-                <td>$${venta.precio_unitario || 0}</td>
-                <td>$${(venta.precio_unitario || 0) * (venta.cantidad || 0)}</td>
+                <td>${cantidadVenta}</td>
+                <td>$${precioUnitario.toFixed(2)}</td>
+                <td>$${totalVenta.toFixed(2)}</td>
             `;
 
             tablaVentas.appendChild(fila);
