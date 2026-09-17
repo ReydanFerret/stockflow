@@ -60,12 +60,17 @@ function renderizarTablaProductos(productos) {
     productos.forEach((producto) => {
         const fila = document.createElement("tr");
         fila.dataset.id = producto.id;
+
+        const celdaImagen = producto.imagen
+            ? `<img src="${API_BASE}/imagen.php?id=${producto.id}" alt="${producto.nombre}" style="max-width:60px;max-height:60px;object-fit:cover;border-radius:6px;">`
+            : "Sin imagen";
+
         fila.innerHTML = `
             <td>${producto.nombre}</td>
             <td>$${producto.precio}</td>
             <td class="celda-stock">${producto.stock}</td>
             <td>${producto.umbral_minimo}</td>
-            <td>Sin imagen</td>
+            <td>${celdaImagen}</td>
             <td>${producto.descripcion || "Sin descripción"}</td>
         `;
         tbody.appendChild(fila);
@@ -86,6 +91,8 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
     const stock = document.getElementById("stock").value;
     const umbral = document.getElementById("umbral").value;
     const descripcion = document.getElementById("descripcion").value.trim();
+    const inputImagen = document.getElementById("imagen");
+    const archivoImagen = inputImagen.files[0] || null;
 
     if (nombre === "" || precio === "" || stock === "") {
         mostrarError("Completá al menos producto, precio y stock.");
@@ -100,16 +107,34 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
 
         if (modoEditarProductos && productoAEditar) {
 
-            await apiFetch(`/productos.php?id=${productoAEditar.id}`, {
-                method: "PATCH",
-                body: {
-                    nombre,
-                    precio: Number(precio),
-                    stock: Number(stock),
-                    umbral_minimo: Number(umbral || 0),
-                    descripcion
-                }
-            });
+            if (archivoImagen) {
+                // Con imagen nueva: se manda por POST multipart con
+                // _metodo=PATCH, porque PHP no manda $_FILES en
+                // requests PATCH
+                const formData = new FormData();
+                formData.append("_metodo", "PATCH");
+                formData.append("id", productoAEditar.id);
+                formData.append("nombre", nombre);
+                formData.append("precio", Number(precio));
+                formData.append("stock", Number(stock));
+                formData.append("umbral_minimo", Number(umbral || 0));
+                formData.append("descripcion", descripcion);
+                formData.append("imagen", archivoImagen);
+
+                await apiFetch("/productos.php", { method: "POST", body: formData });
+            } else {
+                // Sin imagen nueva: PATCH + JSON como siempre.
+                await apiFetch(`/productos.php?id=${productoAEditar.id}`, {
+                    method: "PATCH",
+                    body: {
+                        nombre,
+                        precio: Number(precio),
+                        stock: Number(stock),
+                        umbral_minimo: Number(umbral || 0),
+                        descripcion
+                    }
+                });
+            }
 
             mostrarExito("Producto actualizado con éxito.");
 
@@ -127,16 +152,28 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
 
         else {
 
-            await apiFetch("/productos.php", {
-                method: "POST",
-                body: {
-                    nombre,
-                    precio: Number(precio),
-                    stock: Number(stock),
-                    umbral_minimo: Number(umbral || 0),
-                    descripcion
-                }
-            });
+            if (archivoImagen) {
+                const formData = new FormData();
+                formData.append("nombre", nombre);
+                formData.append("precio", Number(precio));
+                formData.append("stock", Number(stock));
+                formData.append("umbral_minimo", Number(umbral || 0));
+                formData.append("descripcion", descripcion);
+                formData.append("imagen", archivoImagen);
+
+                await apiFetch("/productos.php", { method: "POST", body: formData });
+            } else {
+                await apiFetch("/productos.php", {
+                    method: "POST",
+                    body: {
+                        nombre,
+                        precio: Number(precio),
+                        stock: Number(stock),
+                        umbral_minimo: Number(umbral || 0),
+                        descripcion
+                    }
+                });
+            }
 
             mostrarExito("Producto agregado con éxito.");
         }
@@ -147,6 +184,7 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
         document.getElementById("stock").value = "";
         document.getElementById("umbral").value = "";
         document.getElementById("descripcion").value = "";
+        inputImagen.value = "";
 
         document.getElementById("btnAgregar").textContent = "Agregar Producto";
 
@@ -187,6 +225,7 @@ document.getElementById("btnEditar").addEventListener("click", function () {
         document.getElementById("stock").value = "";
         document.getElementById("umbral").value = "";
         document.getElementById("descripcion").value = "";
+        document.getElementById("imagen").value = "";
 
         document.getElementById("btnAgregar").textContent = "Agregar Producto";
 

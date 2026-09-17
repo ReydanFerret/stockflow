@@ -43,12 +43,17 @@ function renderizarTabla(productos) {
     productos.forEach((producto) => {
         const fila = document.createElement("tr");
         fila.dataset.id = producto.id;
+
+        const celdaImagen = producto.imagen
+            ? `<img src="${API_BASE}/imagen.php?id=${producto.id}" alt="${producto.nombre}" style="max-width:60px;max-height:60px;object-fit:cover;border-radius:6px;">`
+            : "Sin imagen";
+
         fila.innerHTML = `
             <td>${producto.nombre}</td>
             <td>$${producto.precio}</td>
             <td>${producto.stock}</td>
             <td>${producto.umbral_minimo}</td>
-            <td>Sin imagen</td>
+            <td>${celdaImagen}</td>
             <td>${producto.descripcion || "Sin descripción"}</td>
         `;
         tbody.appendChild(fila);

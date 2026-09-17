@@ -4,17 +4,19 @@
 const API_BASE = "https://stockflow.tail9e5e92.ts.net:8443";
 
 async function apiFetch(ruta, opciones = {}) {
+    const esFormData = opciones.body instanceof FormData;
+
     const config = {
         method: opciones.method || "GET",
         credentials: "include",
         headers: {
-            "Content-Type": "application/json",
+            ...(esFormData ? {} : { "Content-Type": "application/json" }),
             ...(opciones.headers || {}),
         },
     };
 
     if (opciones.body !== undefined) {
-        config.body = JSON.stringify(opciones.body);
+        config.body = esFormData ? opciones.body : JSON.stringify(opciones.body);
     }
 
     let respuesta;
@@ -56,16 +58,7 @@ async function obtenerUsuarioActual() {
     }
 }
 
-/**
- * Guarda de página: se llama al principio de cada dashboard.
- * - Si no hay sesión, manda a login.
- * - Si hay sesión pero el rol no está entre los permitidos para
- *   esta página, lo manda a SU dashboard correcto (no a login,
- *   porque sí está autenticado, solo que en la página que no le
- *   corresponde).
- * Devuelve el usuario si todo está en orden, para que la página
- * pueda usar sus datos (nombre, id, rol) sin pedirlo de nuevo.
- */
+
 async function protegerPagina(rolesPermitidos) {
     const usuario = await obtenerUsuarioActual();
 
