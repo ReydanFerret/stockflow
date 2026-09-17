@@ -40,19 +40,24 @@
 
     <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">Generador de reportes</h2>
 
+    <div id="contenedorAlertas" class="d-flex justify-content-center mb-3"></div>
+
     <div class="container-fluid d-flex w-auto align-items-center mx-auto flex-wrap">
-        <label for="fechaDesde" class="form-label fs-5 w-auto mx-3 mb-3">Fecha inicial</label>
-        <input type="date" class="form-control w-auto mx-3 mb-3" id="fechaDesde" name="fechaInicio" min="2000-01-01" max="2026-12-31">
-        
-        <label for="fechaHasta" class="form-label fs-5 w-auto mx-3 mb-3">Fecha final</label>
-        <input type="date" class="form-control mx-3 w-auto mb-3" id="fechaHasta" name="fechaInicio" min="2000-01-01" max="2026-12-31">
-        
+
         <select id="tipoReporte" class="form-select fs-6 w-auto mx-3 mb-3" name="tipoReporte">
             <option value="">Seleccione un tipo</option>
-            <option value="admin">Ventas</option>
-            <option value="vendedor">Inventario</option>
-            <option value="repositor">Gastos</option>
+            <option value="ventas">Ventas</option>
+            <option value="inventario">Inventario</option>
+            <option value="gastos">Gastos</option>
         </select>
+
+        <div id="contenedorFechas" class="d-flex flex-wrap align-items-center">
+            <label for="fechaDesde" class="form-label fs-5 w-auto mx-3 mb-3">Fecha inicial</label>
+            <input type="date" class="form-control w-auto mx-3 mb-3" id="fechaDesde" name="fechaInicio" min="2000-01-01" max="2026-12-31">
+
+            <label for="fechaHasta" class="form-label fs-5 w-auto mx-3 mb-3">Fecha final</label>
+            <input type="date" class="form-control mx-3 w-auto mb-3" id="fechaHasta" name="fechaFin" min="2000-01-01" max="2026-12-31">
+        </div>
 
         <button id="btnGenerarReportes" class="btn btn-primary mb-3 fs-6 mx-3 w-auto">
             Generar reporte
@@ -68,17 +73,12 @@
                         <th class="p-3">Fecha fin</th>
                         <th class="p-3">Tipo</th>
                         <th class="p-3">Archivo</th>
-
-                        <tbody class="fs-5">
-                            <tr>
-                                <td>12/07/2026</td>
-                                <td>15/07/2026</td>
-                                <td>Gastos</td>
-                                <td>Sin archivo</td>
-                            </tr>
-                        </tbody>
                     </tr>
                 </thead>
+
+                <tbody class="fs-5">
+                    <tr><td colspan="4" class="text-center">Todavía no generaste ningún reporte.</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -87,13 +87,9 @@
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
     <script src="api.js"></script>
     <script src="reportes.js"></script>
-    <script>
-      
-        document.addEventListener("DOMContentLoaded", () => {
-            protegerPagina(["administrador"]);
-        });
-    </script>
 </body>
 </html>
