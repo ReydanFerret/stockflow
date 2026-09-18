@@ -23,6 +23,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const usuario = await protegerPagina(["repositor", "administrador"]);
     if (!usuario) return;
 
+    // Asignación de eventos JavaScript
+    const inputBuscar = document.getElementById("buscarProducto");
+    if (inputBuscar) {
+        inputBuscar.addEventListener("keyup", buscarProducto);
+    }
+
+    const btnEditar = document.getElementById("btnEditar");
+    if (btnEditar) {
+        btnEditar.addEventListener("click", activarModoEditar);
+    }
+
     await cargarProductos();
 });
 
