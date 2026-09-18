@@ -9,7 +9,7 @@ let productoAEditar = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     usuarioActual = await protegerPagina(["administrador"]);
-    if (!usuarioActual) return; // protegerPagina ya redirigió
+    if (!usuarioActual) return;
 
     await cargarProductos();
     inicializarEventosProductos();
@@ -84,6 +84,25 @@ function renderizarTablaProductos(productos) {
 }
 
 function inicializarEventosProductos() {
+
+    // Punto 10 (CU1): mientras el usuario escribe, no se permiten
+    // caracteres que no sean números en Precio, Stock y Umbral mínimo.
+    ["precio", "stock", "umbral"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", function () {
+            this.value = this.value.replace(/[^0-9]/g, "");
+        });
+    });
+
+    // Flujo de excepción 3 (CU1) / Flujo de excepción 1 (CU2): si el
+    // archivo elegido no es una imagen, se avisa y se limpia el campo.
+    document.getElementById("imagen").addEventListener("change", function () {
+        const archivo = this.files[0];
+        if (archivo && !archivo.type.startsWith("image/")) {
+            mostrarError("Solo se permiten archivos de imagen.");
+            this.value = "";
+        }
+    });
+
 document.getElementById("btnAgregar").addEventListener("click", async () => {
 
     const nombre = document.getElementById("producto").value.trim();
@@ -94,8 +113,19 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
     const inputImagen = document.getElementById("imagen");
     const archivoImagen = inputImagen.files[0] || null;
 
-    if (nombre === "" || precio === "" || stock === "") {
-        mostrarError("Completá al menos producto, precio y stock.");
+    if (nombre === "" || precio === "" || stock === "" || umbral === "") {
+        mostrarError("Producto, Precio, Stock y Umbral mínimo no pueden estar vacíos.");
+        return;
+    }
+
+    if (Number(precio) < 0 || Number(stock) < 0 || Number(umbral) < 0) {
+        mostrarError("Precio, Stock y Umbral mínimo no pueden ser negativos.");
+        return;
+    }
+
+    if (archivoImagen && !archivoImagen.type.startsWith("image/")) {
+        mostrarError("Solo se permiten archivos de imagen.");
+        inputImagen.value = "";
         return;
     }
 
@@ -136,7 +166,7 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
                 });
             }
 
-            mostrarExito("Producto actualizado con éxito.");
+            mostrarExito("Producto actualizado correctamente");
 
             productoAEditar = null;
             modoEditarProductos = false;
@@ -175,7 +205,7 @@ document.getElementById("btnAgregar").addEventListener("click", async () => {
                 });
             }
 
-            mostrarExito("Producto agregado con éxito.");
+            mostrarExito("Producto agregado correctamente.");
         }
 
         // Limpiar campos
