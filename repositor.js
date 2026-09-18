@@ -23,10 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const usuario = await protegerPagina(["repositor", "administrador"]);
     if (!usuario) return;
 
-    // Asignación de eventos JavaScript
     const inputBuscar = document.getElementById("buscarProducto");
     if (inputBuscar) {
-        inputBuscar.addEventListener("keyup", buscarProducto);
+        inputBuscar.addEventListener("input", buscarProducto);
     }
 
     const btnEditar = document.getElementById("btnEditar");
@@ -95,19 +94,14 @@ function comprobarTodosLosStocks() {
 
 function activarModoEditar() {
     if (modoEditar) {
-        // Cancelar: recarga desde el backend, descartando cambios sin guardar
-        modoEditar = false;
-        document.getElementById("btnEditar").textContent = "Editar";
-        document.getElementById("btnEditar").className = "btn btn-success px-4 py-2 fs-6 mx-3";
-        document.getElementById("tablaProductos").classList.remove("modo-edicion");
-        cargarProductos();
-        mostrarAdvertencia("Cambios de stock descartados.");
+        // Guardar cambios al hacer clic en el botón (o cancelar si se prefiere)
+        guardarYSalirEdicion();
         return;
     }
 
     modoEditar = true;
-    document.getElementById("btnEditar").textContent = "Cancelar";
-    document.getElementById("btnEditar").className = "btn btn-danger px-4 py-2 fs-6 mx-3";
+    document.getElementById("btnEditar").textContent = "Guardar";
+    document.getElementById("btnEditar").className = "btn btn-primary px-4 py-2 fs-6 mx-3";
     document.getElementById("tablaProductos").classList.add("modo-edicion");
     convertirCeldasAStockEditables();
 }
@@ -131,10 +125,11 @@ function convertirCeldasAStockEditables() {
 
         input.addEventListener("click", (e) => e.stopPropagation());
 
-        input.addEventListener("keydown", function (e) {
+        input.addEventListener("keydown", async function (e) {
             if (e.key === "Enter") {
                 e.preventDefault();
-                guardarYSalirEdicion();
+                this.blur(); // Quita el foco para disparar la validación blur primero
+                await guardarYSalirEdicion();
             }
         });
     });
@@ -171,6 +166,7 @@ async function guardarYSalirEdicion() {
         await cargarProductos();
         mostrarExito("Stock actualizado correctamente.");
     } catch (error) {
+        console.error("Error al guardar stock:", error);
         mostrarAdvertencia("No se pudo guardar el stock: " + error.message);
     }
 }
