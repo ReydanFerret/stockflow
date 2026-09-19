@@ -16,7 +16,7 @@
 <body>
 
     <header class="d-flex flex-row align-items-center justify-content-center w-100 header">
-        <img src="img/index(login)/logo.png" alt="Logo StockFlow" width="200" class="img-fluid">
+        <img src="logo.png" alt="Logo StockFlow" width="200" class="img-fluid">
         <h1 class="mb-0 ms-3 display-6">Control de Stock y Ventas</h1>
     </header>
 
@@ -29,9 +29,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav w-100 justify-content-around">
                     <a class="nav-link fs-5" href="index.html">Cerrar Sesión</a>
+                    <a class="nav-link fs-5" href="dashboard.html">Dashboard</a>
                     <a class="nav-link fs-5" href="dashboard-vendedor.html">Ventas</a>
                     <a class="nav-link fs-5" href="dashboard-repositor.html">Inventario</a>
-                    <a class="nav-link fs-5" href="dashboard-gastos.html">Gastos</a>
                     <a class="nav-link fs-5" href="dashboard-reportes.html">Reportes</a>
                 </div>
             </div>
@@ -41,6 +41,8 @@
     <h2 class="fs-2 p-4 text-center mx-auto my-4 rounded-3">
         Gastos
     </h2>
+
+    <div id="contenedorAlertas" class="mt-3"></div>
 
     <div class="agregar-producto container d-flex row justify-content-center align-items-center mx-auto mb-4 flex-wrap gap-3">
 
@@ -153,56 +155,6 @@
                     </thead>
 
                     <tbody class="fs-5">
-                        <tr>
-                            <td>03/01/2026</td>
-                            <td>09:30</td>
-                            <td>Compra de Mercadería</td>
-                            <td>Inventario</td>
-                            <td>Transferencia</td>
-                            <td>$850</td>
-                            <td>Proveedor TechMarket</td>
-                        </tr>
-
-                        <tr>
-                            <td>15/02/2026</td>
-                            <td>14:15</td>
-                            <td>Pago de Internet</td>
-                            <td>Servicios</td>
-                            <td>Débito</td>
-                            <td>$75</td>
-                            <td>Factura mensual</td>
-                        </tr>
-
-                        <tr>
-                            <td>28/03/2026</td>
-                            <td>11:40</td>
-                            <td>Publicidad en Redes</td>
-                            <td>Marketing</td>
-                            <td>Crédito</td>
-                            <td>$220</td>
-                            <td>Campaña de Instagram</td>
-                        </tr>
-
-                        <tr>
-                            <td>08/05/2026</td>
-                            <td>16:20</td>
-                            <td>Mantenimiento de Equipos</td>
-                            <td>Mantenimiento</td>
-                            <td>Efectivo</td>
-                            <td>$180</td>
-                            <td>Limpieza de computadoras</td>
-                        </tr>
-
-                        <tr>
-                            <td>21/06/2026</td>
-                            <td>10:05</td>
-                            <td>Pago de Electricidad</td>
-                            <td>Servicios</td>
-                            <td>Transferencia</td>
-                            <td>$130</td>
-                            <td>Factura UTE</td>
-                        </tr>
-
                     </tbody>
 
                 </table>
@@ -227,7 +179,8 @@
         crossorigin="anonymous">
     </script>
 
-    <script src="JS/gastos.js"></script>
+    <script src="api.js"></script>
+    <script src="gastos.js"></script>
 
 </body>
 </html>

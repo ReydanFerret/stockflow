@@ -15,15 +15,14 @@ function mostrarError(mensaje) {
 }
 
 //Funcion que se ejecuta al subir el formulario
-loginForm.addEventListener("submit", function(e) {
+loginForm.addEventListener("submit", async function (e) {
 
     //Evita el comportamiento normal de los componentes del form además de evitar que recargue la web
     e.preventDefault();
 
     //Se declaran distintas constantes con los input del form y extrae el valor de los mismos
-    const usuario = document.getElementById("nombreUsuario").value;
+    const usuario = document.getElementById("nombreUsuario").value.trim();
     const contraseña = document.getElementById("contraseñaUsuario").value;
-    const rol = document.getElementById("rolUsuario").value;
 
     //Validar que la cedula tenga exactamente 8 caracteres y si no los tiene muestra un error
     if (usuario.length !== 8) {
@@ -42,29 +41,28 @@ loginForm.addEventListener("submit", function(e) {
         return;
     }
 
-    //Valida que el usuario haya seleccionado un rol y si no lo selecciona muestra un error
-    if (rol === "") {
-        mostrarError("Seleccione un rol.");
-        return;
-    }
+    // Ya no se pide el rol: lo devuelve el propio backend según el
+    // usuario que inició sesión (viene de la colección "usuarios" en
+    // PocketBase), así que no hay forma de "elegir" un rol que no sea
+    // el que en verdad tiene esa cédula.
+    try {
+        const datos = await apiFetch("/login.php", {
+            method: "POST",
+            body: { cedula: usuario, password: contraseña },
+        });
 
-    //Redirecciona al usuario a la pantalla de admin si su rol es admin y vacia los campos
-    if (rol === "admin") {
-        window.location.href = "dashboard.html";
-        document.getElementById("nombreUsuario").value = "";
-        document.getElementById("contraseñaUsuario").value = "";
-    }
-    //Redirecciona al usuario a la pantalla de vendedor si el rol es vendedor y vacia los campos
-    if (rol === "vendedor") {
-        window.location.href = "dashboard-vendedor.html";
-        document.getElementById("nombreUsuario").value = "";
-        document.getElementById("contraseñaUsuario").value = "";
-    }
-    // Redirecciona al usuario a la pantalla de repositor si el rol es repositor y vacia los campos
-    if (rol === "repositor") {
-        window.location.href = "dashboard-repositor.html";
-        document.getElementById("nombreUsuario").value = "";
-        document.getElementById("contraseñaUsuario").value = "";
-    }
+        const rol = datos.usuario.rol;
+        const destino = DASHBOARD_POR_ROL[rol];
 
+        if (!destino) {
+            mostrarError("Tu usuario no tiene un rol válido asignado. Contactá al administrador.");
+            return;
+        }
+
+        window.location.href = destino;
+    } catch (error) {
+        // apiFetch ya nos da el mensaje real que mandó el backend
+        // (por ejemplo "Cédula y contraseña son obligatorias")
+        mostrarError(error.message);
+    }
 });
