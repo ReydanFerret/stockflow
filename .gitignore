@@ -1,0 +1,25 @@
+# Editor
+.vscode/
+.idea/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs y temporales
+*.log
+*.tmp
+*.bak
+*.save
+
+# Variables de entorno / configuración local
+.env
+.env.*
+config.local.js
+
+# Dependencias
+node_modules/
+
+# Comprimidos
+*.zip
+*.rar
