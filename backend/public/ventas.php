@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: /ventas.php  (requiere sesión)
+ *  - GET [?desde=YYYY-MM-DD&hasta=YYYY-MM-DD] : lista ventas (con rango opcional). Cualquier usuario logueado.
+ *  - POST : registra una venta { producto_id, cantidad, precio_unitario } y descuenta stock.
+ *           Vendedor o administrador.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
@@ -33,7 +40,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $ventas = $ventaServicio->listar($token, $desde, $hasta);
             RespuestaHttp::ok(['ventas' => $ventas]);
         } catch (ValidacionException $e) {
-            RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 400);
+            RespuestaHttp::error($e->obtenerMensaje(), 400);
         }
         break;
 
@@ -50,7 +57,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             // Unimos los mensajes por campo en un solo string legible,
             // en vez del genérico "Datos inválidos". Ej: "Stock
             // insuficiente. Disponible: 3"
-            $mensaje = implode(' ', $e->obtenerErrores());
+            $mensaje = $e->obtenerMensaje();
             RespuestaHttp::error($mensaje, 400);
         }
         break;

@@ -17,7 +17,13 @@ class VentaServicio
     }
 
     /**
-     * @throws ValidacionException
+     * Lista las ventas, de la más reciente a la más antigua, con el
+     * nombre del producto vendido ("producto_nombre") ya aplanado.
+     *
+     * @param string      $token Token del usuario logueado.
+     * @param string|null $desde Fecha inicial YYYY-MM-DD (opcional).
+     * @param string|null $hasta Fecha final YYYY-MM-DD (opcional).
+     * @throws ValidacionException si alguna fecha tiene formato inválido.
      */
     public function listar(string $token, ?string $desde = null, ?string $hasta = null): array
     {
@@ -26,24 +32,10 @@ class VentaServicio
             'expand' => 'producto',
         ];
 
-        $condiciones = [];
-
-        if ($desde !== null) {
-            if (!$this->esFechaValida($desde)) {
-                throw new ValidacionException(['desde' => 'La fecha inicial no es válida']);
-            }
-            $condiciones[] = "fecha >= \"{$desde}\"";
-        }
-
-        if ($hasta !== null) {
-            if (!$this->esFechaValida($hasta)) {
-                throw new ValidacionException(['hasta' => 'La fecha final no es válida']);
-            }
-            $condiciones[] = "fecha <= \"{$hasta}\"";
-        }
-
-        if (!empty($condiciones)) {
-            $filtros['filter'] = implode(' && ', $condiciones);
+        // Filtro opcional por rango de fechas (valida el formato YYYY-MM-DD).
+        $condicion = Fechas::construirFiltro($desde, $hasta);
+        if ($condicion !== null) {
+            $filtros['filter'] = $condicion;
         }
 
         $ventas = $this->repositorio->listar($token, $filtros);
@@ -60,17 +52,20 @@ class VentaServicio
         return $ventas;
     }
 
-    // Formato estricto YYYY-MM-DD. Se valida antes de meter el valor
-    // en el filtro de PocketBase, para no armar un filtro con datos
-    // arbitrarios del usuario.
-    private function esFechaValida(string $fecha): bool
-    {
-        $d = \DateTime::createFromFormat('Y-m-d', $fecha);
-        return $d !== false && $d->format('Y-m-d') === $fecha;
-    }
-
     /**
-     * @throws ValidacionException
+     * Registra una venta. Pasos, en este orden:
+     *  1. Valida precio, cantidad y producto (reglas del servidor).
+     *  2. Comprueba que el producto exista y que haya stock suficiente,
+     *     ANTES de guardar nada.
+     *  3. Crea la venta con la fecha y hora actuales del servidor.
+     *  4. Descuenta el stock del producto.
+     *  5. Registra la relación Usuario-Venta ("Realiza").
+     *
+     * @param array  $entrada   Datos del formulario: precio_unitario, cantidad, producto_id.
+     * @param string $usuarioId Id del vendedor logueado.
+     * @param string $token     Token del usuario logueado.
+     * @return array La venta creada, con "producto_nombre".
+     * @throws ValidacionException si los datos son inválidos o no hay stock.
      */
     public function crear(array $entrada, string $usuarioId, string $token): array
     {

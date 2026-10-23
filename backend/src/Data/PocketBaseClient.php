@@ -53,32 +53,53 @@ class PocketBaseClient
         );
     }
 
-    /** @throws PocketBaseException */
+    /**
+     * Lista registros de una colección. $query admite 'filter', 'sort' y 'expand' de PocketBase.
+     * Devuelve la respuesta cruda de PocketBase (la lista está en 'items').
+     *
+     * @throws PocketBaseException
+     */
     public function listar(string $coleccion, ?string $token = null, array $query = []): array
     {
         $queryString = empty($query) ? '' : ('?' . http_build_query($query));
         return $this->peticion('GET', "/api/collections/{$coleccion}/records{$queryString}", null, $token);
     }
 
-    /** @throws PocketBaseException */
+    /**
+     * Obtiene un registro por id.
+     *
+     * @throws PocketBaseException
+     */
     public function obtener(string $coleccion, string $id, ?string $token = null): array
     {
         return $this->peticion('GET', "/api/collections/{$coleccion}/records/{$id}", null, $token);
     }
 
-    /** @throws PocketBaseException */
+    /**
+     * Crea un registro con datos JSON y devuelve el registro creado.
+     *
+     * @throws PocketBaseException
+     */
     public function crear(string $coleccion, array $datos, ?string $token = null): array
     {
         return $this->peticion('POST', "/api/collections/{$coleccion}/records", $datos, $token);
     }
 
-    /** @throws PocketBaseException */
+    /**
+     * Actualiza parcialmente un registro (PATCH) y devuelve el resultado.
+     *
+     * @throws PocketBaseException
+     */
     public function actualizar(string $coleccion, string $id, array $datos, ?string $token = null): array
     {
         return $this->peticion('PATCH', "/api/collections/{$coleccion}/records/{$id}", $datos, $token);
     }
 
-    /** @throws PocketBaseException */
+    /**
+     * Elimina un registro por id.
+     *
+     * @throws PocketBaseException
+     */
     public function eliminar(string $coleccion, string $id, ?string $token = null): bool
     {
         $this->peticion('DELETE', "/api/collections/{$coleccion}/records/{$id}", null, $token);
@@ -147,7 +168,9 @@ class PocketBaseClient
     }
 
     /**
-     * Ejecuta la petición HTTP real contra PocketBase (JSON).
+     * Ejecuta la petición HTTP real contra PocketBase (JSON). Es el punto
+     * único por el que pasan todas las operaciones normales (listar, crear, etc.).
+     * El token del usuario viaja en el header Authorization.
      *
      * @throws PocketBaseException si la respuesta no es 2xx o si falla la conexión
      */
@@ -212,6 +235,10 @@ class PocketBaseClient
     }
 
     /**
+     * Ejecuta el pedido curl ya armado, decodifica el JSON de respuesta y
+     * traduce cualquier código que no sea 2xx (o un fallo de conexión,
+     * código 0) en una PocketBaseException.
+     *
      * @throws PocketBaseException
      */
     private function ejecutarYDecodificar(\CurlHandle $ch): array

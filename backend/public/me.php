@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: GET /me.php
+ * Devuelve el usuario de la sesión activa. El frontend lo usa para
+ * saber si hay sesión y a qué panel mandar al usuario según su rol.
+ * Responde: 200 { usuario: { id, nombre, apellido, rol } } | 401 sin sesión.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;

@@ -19,37 +19,35 @@ class GastoServicio
     }
 
     /**
-     * @throws ValidacionException
+     * Lista los gastos, del más reciente al más antiguo.
+     *
+     * @param string      $token Token del usuario logueado.
+     * @param string|null $desde Fecha inicial YYYY-MM-DD (opcional).
+     * @param string|null $hasta Fecha final YYYY-MM-DD (opcional).
+     * @throws ValidacionException si alguna fecha tiene formato inválido.
      */
     public function listar(string $token, ?string $desde = null, ?string $hasta = null): array
     {
         $filtros = ['sort' => '-fecha'];
 
-        $condiciones = [];
-
-        if ($desde !== null) {
-            if (!$this->esFechaValida($desde)) {
-                throw new ValidacionException(['desde' => 'La fecha inicial no es válida']);
-            }
-            $condiciones[] = "fecha >= \"{$desde}\"";
-        }
-
-        if ($hasta !== null) {
-            if (!$this->esFechaValida($hasta)) {
-                throw new ValidacionException(['hasta' => 'La fecha final no es válida']);
-            }
-            $condiciones[] = "fecha <= \"{$hasta}\"";
-        }
-
-        if (!empty($condiciones)) {
-            $filtros['filter'] = implode(' && ', $condiciones);
+        // Filtro opcional por rango de fechas (valida el formato YYYY-MM-DD).
+        $condicion = Fechas::construirFiltro($desde, $hasta);
+        if ($condicion !== null) {
+            $filtros['filter'] = $condicion;
         }
 
         return $this->repositorio->listar($token, $filtros);
     }
 
     /**
-     * @throws ValidacionException
+     * Registra un gasto con la fecha y hora actuales del servidor y deja
+     * constancia de quién lo cargó en la relación Usuario-Gasto ("Registra").
+     *
+     * @param array  $entrada   Datos del formulario: concepto, monto, categoria, metodo_pago, observacion.
+     * @param string $usuarioId Id del usuario (administrador) que lo registra.
+     * @param string $token     Token del usuario logueado.
+     * @return array El gasto creado.
+     * @throws ValidacionException si concepto o monto son inválidos.
      */
     public function crear(array $entrada, string $usuarioId, string $token): array
     {
@@ -97,6 +95,11 @@ class GastoServicio
         return $gasto;
     }
 
+    /**
+     * Convierte la categoría que viene del formulario (texto libre, ej.
+     * "Compra de mercadería") al valor fijo que acepta PocketBase
+     * (ej. "compra_mercaderia"). Si no coincide con ninguna, devuelve "otros".
+     */
     private function normalizarCategoria(string $categoriaTexto): string
     {
         $mapa = [
@@ -115,12 +118,4 @@ class GastoServicio
         return $mapa[$clave] ?? 'otros';
     }
 
-    // Formato estricto YYYY-MM-DD. Se valida antes de meter el valor
-    // en el filtro de PocketBase, para no armar un filtro con datos
-    // arbitrarios del usuario.
-    private function esFechaValida(string $fecha): bool
-    {
-        $d = \DateTime::createFromFormat('Y-m-d', $fecha);
-        return $d !== false && $d->format('Y-m-d') === $fecha;
-    }
 }

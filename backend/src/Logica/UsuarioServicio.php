@@ -15,6 +15,10 @@ class UsuarioServicio
     {
     }
 
+    /**
+     * Lista los usuarios ordenados por nombre, devolviendo solo los
+     * campos seguros (nunca contraseñas ni datos internos de PocketBase).
+     */
     public function listar(string $token): array
     {
         $usuarios = $this->repositorio->listar($token, ['sort' => 'nombre']);
@@ -33,7 +37,12 @@ class UsuarioServicio
     }
 
     /**
-     * @throws ValidacionException
+     * Crea un usuario. Valida cédula (6 a 8 dígitos), nombre, apellido,
+     * contraseña (mínimo 8 caracteres) y rol (vendedor, administrador o
+     * repositor). La contraseña se manda a PocketBase, que la hashea.
+     *
+     * @param array $entrada Datos del formulario de personal.
+     * @throws ValidacionException si algún dato no pasa las validaciones.
      */
     public function crear(array $entrada, string $token): array
     {
@@ -85,7 +94,7 @@ class UsuarioServicio
             'rol' => $rol,
             'password' => $password,
             'passwordConfirm' => $password,
-	     'emailVisibility' => true,
+            'emailVisibility' => true,
         ];
 
         if ($email !== '') {
@@ -95,6 +104,7 @@ class UsuarioServicio
         return $this->repositorio->crear($datosPocketBase, $token);
     }
 
+    /** Elimina un usuario por su id. */
     public function eliminar(string $id, string $token): bool
     {
         return $this->repositorio->eliminar($id, $token);

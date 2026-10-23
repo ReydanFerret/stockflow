@@ -2,6 +2,16 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: /productos.php  (requiere sesión)
+ *  - GET                : lista productos. Cualquier usuario logueado.
+ *  - POST               : crea un producto (JSON o multipart con imagen). Repositor o administrador.
+ *                         Si el multipart trae _metodo=PATCH + id, edita el producto con imagen nueva.
+ *  - PATCH ?id=...      : edita un producto sin imagen (JSON). Repositor o administrador.
+ *                         Si el body trae SOLO "stock" se actualiza únicamente el stock.
+ *  - DELETE ?id=...     : elimina un producto. Solo administrador.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
@@ -63,7 +73,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 RespuestaHttp::ok(['producto' => $producto], 201);
             }
         } catch (ValidacionException $e) {
-            RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 400);
+            RespuestaHttp::error($e->obtenerMensaje(), 400);
         }
         break;
 
@@ -95,7 +105,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             }
             RespuestaHttp::ok(['producto' => $producto]);
         } catch (ValidacionException $e) {
-            RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 400);
+            RespuestaHttp::error($e->obtenerMensaje(), 400);
         }
 
         break;

@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: /usuarios.php  (requiere sesión, solo administrador)
+ *  - GET           : lista el personal (sin contraseñas).
+ *  - POST          : crea un usuario { cedula, nombre, apellido, password, rol, ... }.
+ *  - DELETE ?id=...: elimina un usuario.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;

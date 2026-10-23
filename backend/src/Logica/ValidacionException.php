@@ -20,8 +20,18 @@ class ValidacionException extends Exception
         $this->errores = $errores;
     }
 
+    /** Devuelve los errores como un array campo => mensaje. */
     public function obtenerErrores(): array
     {
         return $this->errores;
+    }
+
+    /**
+     * Une todos los mensajes en un solo texto legible para mostrarle
+     * al usuario. Ej.: "Stock insuficiente. Disponible: 3"
+     */
+    public function obtenerMensaje(): string
+    {
+        return implode(' ', $this->errores);
     }
 }

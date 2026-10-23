@@ -12,15 +12,25 @@ class ReporteServicio
     {
     }
 
+    /**
+     * Lista el historial de reportes generados (sin filtros ni orden
+     * particular: el frontend los muestra tal como vienen).
+     *
+     * @throws \App\Data\PocketBaseException
+     */
     public function listar(string $token): array
     {
-        // Lista todos los reportes sin filtros ni orden.
         return $this->repositorio->listar($token, []);
     }
 
     /**
-     * @param array|null $archivo Entrada de $_FILES['archivo']
-     * @throws ValidacionException
+     * Valida y guarda un reporte (PDF) junto con su tipo y rango de fechas.
+     * El tipo "inventario" es una foto del stock actual, por eso no
+     * lleva rango de fechas.
+     *
+     * @param array      $entrada Campos del formulario: tipo, fecha_inicio, fecha_fin.
+     * @param array|null $archivo Entrada de $_FILES['archivo'] (debe ser un PDF).
+     * @throws ValidacionException si el tipo, las fechas o el archivo son inválidos.
      */
     public function registrar(array $entrada, ?array $archivo, string $token): array
     {
@@ -37,10 +47,10 @@ class ReporteServicio
         // El inventario es una foto del stock actual: no lleva rango
         // de fechas, así que no lo exigimos para ese tipo.
         if ($tipo !== 'inventario') {
-            if (!$this->esFechaValida($fechaInicio)) {
+            if (!Fechas::esValida($fechaInicio)) {
                 $errores['fecha_inicio'] = 'La fecha inicial no es válida';
             }
-            if (!$this->esFechaValida($fechaFin)) {
+            if (!Fechas::esValida($fechaFin)) {
                 $errores['fecha_fin'] = 'La fecha final no es válida';
             }
         }
@@ -65,8 +75,11 @@ class ReporteServicio
     }
 
     /**
+     * Devuelve los bytes del PDF de un reporte para que reporte-archivo.php
+     * lo entregue como descarga.
+     *
      * @return array{contenido: string, tipo: string}
-     * @throws ValidacionException
+     * @throws ValidacionException si el reporte no tiene archivo cargado.
      */
     public function obtenerArchivo(string $id, string $token): array
     {
@@ -80,9 +93,4 @@ class ReporteServicio
         return $this->repositorio->obtenerArchivo($id, $nombreArchivo, $token);
     }
 
-    private function esFechaValida(string $fecha): bool
-    {
-        $d = \DateTime::createFromFormat('Y-m-d', $fecha);
-        return $d !== false && $d->format('Y-m-d') === $fecha;
-    }
 }

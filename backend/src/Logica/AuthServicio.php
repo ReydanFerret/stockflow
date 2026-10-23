@@ -52,6 +52,7 @@ class AuthServicio
         return $respuesta['record'];
     }
 
+    /** Cierra la sesión: vacía los datos guardados y destruye la sesión de PHP. */
     public function logout(): void
     {
         $_SESSION = [];
@@ -60,16 +61,19 @@ class AuthServicio
         }
     }
 
+    /** Datos del usuario logueado (guardados al hacer login), o null si no hay sesión. */
     public function usuarioActual(): ?array
     {
         return $_SESSION['usuario'] ?? null;
     }
 
+    /** Token de PocketBase del usuario logueado, o null si no hay sesión. */
     public function tokenActual(): ?string
     {
         return $_SESSION['token'] ?? null;
     }
 
+    /** Indica si hay un usuario logueado en esta sesión de PHP. */
     public function haySesionActiva(): bool
     {
         return isset($_SESSION['token'], $_SESSION['usuario']);

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: /gastos.php  (requiere sesión, solo administrador)
+ *  - GET [?desde=YYYY-MM-DD&hasta=YYYY-MM-DD] : lista gastos (con rango opcional).
+ *  - POST : registra un gasto { concepto, monto, categoria, metodo_pago, observacion }.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
@@ -31,7 +37,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $gastos = $gastoServicio->listar($token, $desde, $hasta);
             RespuestaHttp::ok(['gastos' => $gastos]);
         } catch (ValidacionException $e) {
-            RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 400);
+            RespuestaHttp::error($e->obtenerMensaje(), 400);
         }
         break;
 
@@ -44,7 +50,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $gasto = $gastoServicio->crear($entrada, $usuario['id'], $token);
             RespuestaHttp::ok(['gasto' => $gasto], 201);
         } catch (ValidacionException $e) {
-            RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 400);
+            RespuestaHttp::error($e->obtenerMensaje(), 400);
         }
         break;
 

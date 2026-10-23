@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: /reportes.php  (requiere sesión, solo administrador)
+ *  - GET  : lista el historial de reportes generados.
+ *  - POST : guarda un reporte (multipart): tipo, fecha_inicio, fecha_fin y el PDF en "archivo".
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
@@ -25,7 +31,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         try {
             $reportes = $reporteServicio->listar($token);
             RespuestaHttp::ok(['reportes' => $reportes]);
-                } catch (PocketBaseException $e) {
+        } catch (PocketBaseException $e) {
             error_log('[REPORTES] ' . $e->getMessage());
             RespuestaHttp::error('No se pudieron obtener los reportes', 500);
         }
@@ -39,7 +45,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $reporte = $reporteServicio->registrar($entrada, $archivo, $token);
             RespuestaHttp::ok(['reporte' => $reporte], 201);
         } catch (ValidacionException $e) {
-            RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 400);
+            RespuestaHttp::error($e->obtenerMensaje(), 400);
         }
         break;
 

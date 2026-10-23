@@ -17,14 +17,18 @@ class ProductoServicio
     {
     }
 
+    /** Lista todos los productos ordenados por nombre. */
     public function listar(string $token): array
     {
         return $this->repositorio->listar($token, ['sort' => 'nombre']);
     }
 
     /**
+     * Crea un producto, con imagen opcional.
+     *
+     * @param array      $entrada Datos del formulario (nombre, precio, stock, umbral_minimo, descripcion).
      * @param array|null $archivo Entrada de $_FILES['imagen'], o null si no se subió imagen.
-     * @throws ValidacionException
+     * @throws ValidacionException si los datos o la imagen son inválidos.
      */
     public function crear(array $entrada, string $token, ?array $archivo = null): array
     {
@@ -39,8 +43,10 @@ class ProductoServicio
     }
 
     /**
+     * Actualiza un producto completo; la imagen solo cambia si se sube una nueva.
+     *
      * @param array|null $archivo Entrada de $_FILES['imagen'], o null si no se subió imagen nueva.
-     * @throws ValidacionException
+     * @throws ValidacionException si los datos o la imagen son inválidos.
      */
     public function actualizar(string $id, array $entrada, string $token, ?array $archivo = null): array
     {
@@ -54,6 +60,7 @@ class ProductoServicio
         return $this->repositorio->actualizar($id, $datos, $token);
     }
 
+    /** Elimina un producto por su id. */
     public function eliminar(string $id, string $token): bool
     {
         return $this->repositorio->eliminar($id, $token);

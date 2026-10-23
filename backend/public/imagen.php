@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: GET /imagen.php?id=<idProducto>  (requiere sesión)
+ * Proxy de imágenes: descarga la imagen del producto desde PocketBase y la
+ * devuelve como bytes, para que el navegador nunca conozca la URL de PocketBase.
+ * Responde: la imagen | 400 falta id | 404 producto sin imagen | 502 fallo al obtenerla.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
@@ -35,7 +42,7 @@ $productoServicio = new ProductoServicio(new ProductoRepositorio());
 try {
     $archivo = $productoServicio->obtenerImagen($id, $token);
 } catch (ValidacionException $e) {
-    RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 404);
+    RespuestaHttp::error($e->obtenerMensaje(), 404);
     exit;
 } catch (PocketBaseException $e) {
     RespuestaHttp::error('No se pudo obtener la imagen', 502);

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: GET /reporte-archivo.php?id=<idReporte>  (requiere sesión, solo administrador)
+ * Descarga el PDF de un reporte guardado. Responde bytes crudos (no el sobre JSON).
+ * Responde: el PDF | 400 falta id | 404 reporte sin archivo | 502 fallo al obtenerlo.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
@@ -34,7 +40,7 @@ $reporteServicio = new ReporteServicio(new ReporteRepositorio());
 try {
     $archivo = $reporteServicio->obtenerArchivo($id, $token);
 } catch (ValidacionException $e) {
-    RespuestaHttp::error(implode(' ', $e->obtenerErrores()), 404);
+    RespuestaHttp::error($e->obtenerMensaje(), 404);
     exit;
 } catch (PocketBaseException $e) {
     RespuestaHttp::error('No se pudo obtener el archivo', 502);

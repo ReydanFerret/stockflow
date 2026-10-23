@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/**
+ * Endpoint: POST /login.php
+ * Inicia sesión con cédula y contraseña (el login real lo valida PocketBase).
+ * Body JSON : { "cedula": "...", "password": "..." }
+ * Responde  : 200 { usuario: { id, nombre, apellido, rol } } | 400 faltan datos | 401 credenciales inválidas.
+ * Efecto    : guarda token y usuario en la sesión de PHP.
+ */
+
 require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;

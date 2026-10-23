@@ -1,24 +1,12 @@
 # Credenciales / configuración real (nunca se versiona)
 config/config.php
-.env
-.env.*
 
-# Dependencias
+# Dependencias (si más adelante se agrega Composer)
 /vendor/
 
-# Sistema operativo
+# Archivos de entorno del sistema
 .DS_Store
 Thumbs.db
 
 # Logs
 *.log
-
-# Copias de respaldo / temporales
-*.save
-*.bak
-*~
-*.swp
-
-# Comprimidos
-*.zip
-*.rar

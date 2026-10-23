@@ -2,19 +2,12 @@
 
 namespace App\Data;
 
+/**
+ * Repositorio de la colección "reportes" (cada registro guarda un PDF).
+ * La subida y descarga del PDF usan crearConArchivo() y obtenerArchivo(),
+ * heredados de RepositorioBase.
+ */
 class ReporteRepositorio extends RepositorioBase
 {
     protected string $coleccion = 'reportes';
-
-    /** @throws PocketBaseException */
-    public function crearConArchivo(array $campos, array $archivos, ?string $token = null): array
-    {
-        return PocketBaseClient::obtenerInstancia()->crearConArchivo($this->coleccion, $campos, $archivos, $token);
-    }
-
-    /** @throws PocketBaseException */
-    public function obtenerArchivo(string $id, string $nombreArchivo, ?string $token = null): array
-    {
-        return PocketBaseClient::obtenerInstancia()->obtenerArchivo($this->coleccion, $id, $nombreArchivo, $token);
-    }
 }
