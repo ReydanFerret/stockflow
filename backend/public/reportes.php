@@ -25,8 +25,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
         try {
             $reportes = $reporteServicio->listar($token);
             RespuestaHttp::ok(['reportes' => $reportes]);
-        } catch (PocketBaseException $e) {
-                }
+                } catch (PocketBaseException $e) {
+            error_log('[REPORTES] ' . $e->getMessage());
+            RespuestaHttp::error('No se pudieron obtener los reportes', 500);
+        }
         break;
 
     case 'POST':

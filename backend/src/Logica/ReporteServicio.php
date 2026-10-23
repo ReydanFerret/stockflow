@@ -14,8 +14,7 @@ class ReporteServicio
 
     public function listar(string $token): array
     {
-        // TEMPORAL (diagnóstico): sin sort, para confirmar si el error
-        // 400 de PocketBase viene de ordenar por 'created'.
+        // Lista todos los reportes sin filtros ni orden.
         return $this->repositorio->listar($token, []);
     }
 
