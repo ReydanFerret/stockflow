@@ -21,7 +21,12 @@ class Fechas
 
     /**
      * Arma el filtro de PocketBase para un rango de fechas sobre el
-     * campo "fecha", por ejemplo:  fecha >= "2026-09-01" && fecha <= "2026-09-30".
+     * campo "fecha", por ejemplo:  fecha >= "2026-09-01" && fecha < "2026-10-01".
+     *
+     * El rango es inclusivo en ambos extremos: PocketBase guarda las fechas
+     * como "YYYY-MM-DD 00:00:00.000Z", y al compararlas como texto con
+     * "YYYY-MM-DD" el valor guardado resulta mayor. Por eso el límite superior
+     * se arma contra el día siguiente con "<", y así el último día sí entra.
      *
      * Valida ambas fechas ANTES de meterlas en el filtro, para no armar
      * una consulta con datos arbitrarios que mandó el usuario.
@@ -46,7 +51,8 @@ class Fechas
             if (!self::esValida($hasta)) {
                 throw new ValidacionException(['hasta' => 'La fecha final no es válida']);
             }
-            $condiciones[] = "fecha <= \"{$hasta}\"";
+            $siguiente = (new \DateTime($hasta))->modify('+1 day')->format('Y-m-d');
+            $condiciones[] = "fecha < \"{$siguiente}\"";
         }
 
         return empty($condiciones) ? null : implode(' && ', $condiciones);
