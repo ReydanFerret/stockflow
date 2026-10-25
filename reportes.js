@@ -10,6 +10,22 @@ const ETIQUETAS_TIPO = {
     gastos: "Gastos",
 };
 
+function formatearFecha(valor) {
+    if (!valor) return "-";
+
+    // PocketBase devuelve "2026-10-02 00:00:00.000Z" (con espacio);
+    // se cambia por "T" para que new Date() lo interprete bien en todos los navegadores
+    const fecha = new Date(String(valor).replace(" ", "T"));
+    if (isNaN(fecha.getTime())) return "-";
+
+    return fecha.toLocaleDateString("es-UY", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC", // evita que se corra un día por la zona horaria
+    });
+}
+
 function mostrarAlerta(mensaje, tipo) {
     const contenedor = document.getElementById("contenedorAlertas");
     if (contenedor) {
@@ -49,12 +65,12 @@ async function cargarHistorialReportes() {
                 ? `<a href="${API_BASE}/reporte-archivo.php?id=${r.id}" target="_blank" rel="noopener">Descargar PDF</a>`
                 : "Sin archivo";
 
-            fila.innerHTML = `
-                <td>${r.fecha_inicio || "-"}</td>
-                <td>${r.fecha_fin || "-"}</td>
-                <td>${ETIQUETAS_TIPO[r.tipo] || r.tipo}</td>
-                <td>${enlace}</td>
-            `;
+                fila.innerHTML = `
+            <td>${formatearFecha(r.fecha_inicio)}</td>
+            <td>${formatearFecha(r.fecha_fin)}</td>
+            <td>${ETIQUETAS_TIPO[r.tipo] || r.tipo}</td>
+            <td>${enlace}</td>
+        `;
             tbody.appendChild(fila);
         });
     } catch (error) {
@@ -109,7 +125,7 @@ async function generarReporte() {
                 const precioUnitario = Number(v.precio_unitario) || 0;
                 return [
                     v.producto_nombre || "Sin producto",
-                    v.fecha || "-",
+                    formatearFecha(v.fecha),
                     v.hora || "-",
                     cantidad,
                     `$${precioUnitario.toFixed(2)}`,
@@ -121,7 +137,7 @@ async function generarReporte() {
             titulo = `Reporte de Gastos (${desde} a ${hasta})`;
             columnas = ["Fecha", "Concepto", "Categoría", "Método de pago", "Monto", "Observaciones"];
             filas = datos.gastos.map((g) => [
-                g.fecha || "-",
+                formatearFecha(g.fecha),
                 g.concepto || "-",
                 g.categoria || "-",
                 g.metodo_pago || "-",
