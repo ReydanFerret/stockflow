@@ -12,7 +12,6 @@ require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
 use App\Data\GastoRepositorio;
-use App\Data\RegistroRepositorio;
 use App\Http\RespuestaHttp;
 use App\Logica\AuthServicio;
 use App\Logica\GastoServicio;
@@ -23,7 +22,7 @@ $authServicio->exigirSesion();
 
 $token = $authServicio->tokenActual();
 $usuario = $authServicio->usuarioActual();
-$gastoServicio = new GastoServicio(new GastoRepositorio(), new RegistroRepositorio());
+$gastoServicio = new GastoServicio(new GastoRepositorio());
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':

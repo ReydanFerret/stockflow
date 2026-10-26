@@ -13,7 +13,6 @@ require __DIR__ . '/../src/bootstrap.php';
 
 use App\Data\PocketBaseClient;
 use App\Data\VentaRepositorio;
-use App\Data\VentaRealizadaRepositorio;
 use App\Data\ProductoRepositorio;
 use App\Http\RespuestaHttp;
 use App\Logica\AuthServicio;
@@ -27,7 +26,6 @@ $token = $authServicio->tokenActual();
 $usuario = $authServicio->usuarioActual();
 $ventaServicio = new VentaServicio(
     new VentaRepositorio(),
-    new VentaRealizadaRepositorio(),
     new ProductoRepositorio()
 );
 
