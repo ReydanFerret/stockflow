@@ -3,7 +3,6 @@
 namespace App\Logica;
 
 use App\Data\GastoRepositorio;
-use App\Data\RegistroRepositorio;
 
 class GastoServicio
 {
@@ -14,7 +13,6 @@ class GastoServicio
 
     public function __construct(
         private GastoRepositorio $repositorio,
-        private RegistroRepositorio $registroRepositorio,
     ) {
     }
 
@@ -41,7 +39,7 @@ class GastoServicio
 
     /**
      * Registra un gasto con la fecha y hora actuales del servidor y deja
-     * constancia de quién lo cargó en la relación Usuario-Gasto ("Registra").
+     * constancia de quién lo cargó mediante la FK "usuario" (relación 1:N "Registra" del MER).
      *
      * @param array  $entrada   Datos del formulario: concepto, monto, categoria, metodo_pago, observacion.
      * @param string $usuarioId Id del usuario (administrador) que lo registra.
@@ -84,12 +82,7 @@ class GastoServicio
             'monto' => $monto,
             'fecha' => $ahora->format('Y-m-d'),
             'hora' => $ahora->format('H:i'),
-        ], $token);
-
-        // Registra la relación M:N "Registra" (Usuario <-> Gasto) del MER
-        $this->registroRepositorio->crear([
             'usuario' => $usuarioId,
-            'gasto' => $gasto['id'],
         ], $token);
 
         return $gasto;

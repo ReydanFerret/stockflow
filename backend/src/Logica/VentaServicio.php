@@ -3,7 +3,6 @@
 namespace App\Logica;
 
 use App\Data\VentaRepositorio;
-use App\Data\VentaRealizadaRepositorio;
 use App\Data\ProductoRepositorio;
 use App\Data\PocketBaseException;
 
@@ -11,7 +10,6 @@ class VentaServicio
 {
     public function __construct(
         private VentaRepositorio $repositorio,
-        private VentaRealizadaRepositorio $ventaRealizadaRepositorio,
         private ProductoRepositorio $productoRepositorio,
     ) {
     }
@@ -59,7 +57,7 @@ class VentaServicio
      *     ANTES de guardar nada.
      *  3. Crea la venta con la fecha y hora actuales del servidor.
      *  4. Descuenta el stock del producto.
-     *  5. Registra la relación Usuario-Venta ("Realiza").
+     *     (El vendedor queda asociado a la venta por la FK "usuario".)
      *
      * @param array  $entrada   Datos del formulario: precio_unitario, cantidad, producto_id.
      * @param string $usuarioId Id del vendedor logueado.
@@ -114,6 +112,8 @@ class VentaServicio
             'fecha' => $ahora->format('Y-m-d'),
             'hora' => $ahora->format('H:i'),
             'producto' => $productoId,
+            // FK a usuarios: quién realizó la venta (relación 1:N "Realiza" del MER)
+            'usuario' => $usuarioId,
         ];
 
         $venta = $this->repositorio->crear($datosVenta, $token);
@@ -128,12 +128,6 @@ class VentaServicio
             ['stock' => $stockActual - $cantidad],
             $token
         );
-
-        // Registra la relación M:N "Realiza" (Usuario <-> Venta) del MER
-        $this->ventaRealizadaRepositorio->crear([
-            'usuario' => $usuarioId,
-            'venta' => $venta['id'],
-        ], $token);
 
         $venta['producto_nombre'] = $producto['nombre'] ?? null;
 
