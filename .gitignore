@@ -1,3 +1,13 @@
+# Credenciales / configuración real (nunca se versiona)
+backend/config/config.php
+.env
+.env.*
+config.local.js
+
+# Dependencias
+node_modules/
+vendor/
+
 # Editor
 .vscode/
 .idea/
@@ -11,14 +21,6 @@ Thumbs.db
 *.tmp
 *.bak
 *.save
-
-# Variables de entorno / configuración local
-.env
-.env.*
-config.local.js
-
-# Dependencias
-node_modules/
 
 # Comprimidos
 *.zip
