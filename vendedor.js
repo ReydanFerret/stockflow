@@ -7,6 +7,59 @@ const total = document.getElementById("total");
 const btnRegistrarVenta = document.getElementById("btnRegistrarVenta");
 const tablaVentas = document.querySelector("#tablaVentas tbody");
 
+const ZONA_HORARIA = "America/Montevideo";
+
+// PocketBase devuelve "2026-10-02 14:30:00.123Z" (con espacio);
+// se cambia por "T" para que new Date() lo interprete bien en todos los navegadores
+function parsearFechaPB(valor) {
+    if (!valor) return null;
+    const d = new Date(String(valor).replace(" ", "T"));
+    return isNaN(d.getTime()) ? null : d;
+}
+
+// Fecha + hora reales de creación, en hora de Montevideo
+function formatearCreado(valor) {
+    const d = parsearFechaPB(valor);
+    if (!d) return { fecha: null, hora: null };
+    return {
+        fecha: d.toLocaleDateString("es-UY", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            timeZone: ZONA_HORARIA,
+        }),
+        hora: d.toLocaleTimeString("es-UY", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+            timeZone: ZONA_HORARIA,
+        }),
+    };
+}
+
+// Para campos de solo fecha (guardados a medianoche UTC): se muestra en UTC
+// para que no se corra un día por la zona horaria.
+function formatearFecha(valor) {
+    if (!valor) return "Sin fecha";
+
+    const fecha = parsearFechaPB(valor);
+    if (!fecha) return "Sin fecha";
+
+    return fecha.toLocaleDateString("es-UY", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC",
+    });
+}
+
+// Más recientes primero
+function ordenarRecientesPrimero(lista) {
+    const marca = (x) => parsearFechaPB(x.created)?.getTime() || 0;
+    return [...lista].sort((a, b) => marca(b) - marca(a));
+}
+
 function mostrarAlerta(mensaje, tipo) {
     const contenedor = document.getElementById("contenedorAlertas");
     if (contenedor) {
@@ -53,27 +106,15 @@ async function cargarProductosParaSelect() {
 async function cargarHistorialVentas() {
     try {
         const datos = await apiFetch("/ventas.php");
-        console.log(datos.ventas);
-
         tablaVentas.innerHTML = "";
 
-        datos.ventas.forEach((venta) => {
+        ordenarRecientesPrimero(datos.ventas).forEach((venta) => {
             const fila = document.createElement("tr");
+            const creado = formatearCreado(venta.created);
 
-            // Formatear fecha
-            let fechaFormateada = "Sin fecha";
-
-            if (venta.fecha) {
-                const fecha = new Date(venta.fecha);
-
-                if (!isNaN(fecha.getTime())) {
-                    fechaFormateada = fecha.toLocaleDateString("es-UY", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric"
-                    });
-                }
-            }
+            // Si "created" no llega, se usan fecha/hora guardadas como respaldo
+            const fechaFormateada = creado.fecha || formatearFecha(venta.fecha);
+            const horaFormateada = creado.hora || venta.hora || "-";
 
             // Obtener nombre del producto
             const nombreProducto =
@@ -89,7 +130,7 @@ async function cargarHistorialVentas() {
             fila.innerHTML = `
                 <td>${nombreProducto}</td>
                 <td>${fechaFormateada}</td>
-                <td>${venta.hora || ""}</td>
+                <td>${horaFormateada}</td>
                 <td>${cantidadVenta}</td>
                 <td>$${precioUnitario.toFixed(2)}</td>
                 <td>$${totalVenta.toFixed(2)}</td>
@@ -97,12 +138,8 @@ async function cargarHistorialVentas() {
 
             tablaVentas.appendChild(fila);
         });
-
     } catch (error) {
-        console.error(
-            "No se pudo cargar el historial de ventas:",
-            error
-        );
+        console.error("No se pudo cargar el historial de ventas:", error);
     }
 }
 
