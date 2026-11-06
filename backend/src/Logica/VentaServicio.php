@@ -15,8 +15,9 @@ class VentaServicio
     }
 
     /**
-     * Lista las ventas, de la más reciente a la más antigua, con el
-     * nombre del producto vendido ("producto_nombre") ya aplanado.
+     * Lista las ventas, de la más reciente a la más antigua (por momento
+     * de creación, no solo por día), con el nombre del producto vendido
+     * ("producto_nombre") ya aplanado.
      *
      * @param string      $token Token del usuario logueado.
      * @param string|null $desde Fecha inicial YYYY-MM-DD (opcional).
@@ -26,7 +27,9 @@ class VentaServicio
     public function listar(string $token, ?string $desde = null, ?string $hasta = null): array
     {
         $filtros = [
-            'sort' => '-fecha',
+            // "created" incluye fecha y hora exactas: desempata las
+            // ventas del mismo día (con "-fecha" quedaban sin orden).
+            'sort' => '-created',
             'expand' => 'producto',
         ];
 
@@ -55,7 +58,7 @@ class VentaServicio
      *  1. Valida precio, cantidad y producto (reglas del servidor).
      *  2. Comprueba que el producto exista y que haya stock suficiente,
      *     ANTES de guardar nada.
-     *  3. Crea la venta con la fecha y hora actuales del servidor.
+     *  3. Crea la venta con la fecha y hora actuales de Montevideo.
      *  4. Descuenta el stock del producto.
      *     (El vendedor queda asociado a la venta por la FK "usuario".)
      *
@@ -104,13 +107,14 @@ class VentaServicio
             ]);
         }
 
-        $ahora = new \DateTime();
+        // Hora local de Montevideo (no la del servidor, que suele ser UTC).
+        $ahora = new \DateTime('now', new \DateTimeZone('America/Montevideo'));
 
         $datosVenta = [
             'precio_unitario' => $precioUnitario,
             'cantidad' => $cantidad,
             'fecha' => $ahora->format('Y-m-d'),
-            'hora' => $ahora->format('H:i'),
+            'hora' => $ahora->format('H:i:s'),
             'producto' => $productoId,
             // FK a usuarios: quién realizó la venta (relación 1:N "Realiza" del MER)
             'usuario' => $usuarioId,

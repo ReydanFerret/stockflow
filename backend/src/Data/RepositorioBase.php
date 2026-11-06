@@ -31,7 +31,9 @@ abstract class RepositorioBase
     }
 
     /**
-     * Lista los registros de la colección.
+     * Lista TODOS los registros de la colección, recorriendo todas las
+     * páginas de PocketBase (por defecto devuelve solo 30 por página, y
+     * los reportes saldrían incompletos).
      *
      * @param string|null $token   Token del usuario logueado (respeta las reglas de acceso de PocketBase).
      * @param array       $filtros Parámetros de consulta de PocketBase: 'filter', 'sort', 'expand'.
@@ -40,8 +42,21 @@ abstract class RepositorioBase
      */
     public function listar(?string $token = null, array $filtros = []): array
     {
-        $respuesta = $this->cliente->listar($this->coleccion, $token, $filtros);
-        return $respuesta['items'] ?? [];
+        $todos = [];
+        $pagina = 1;
+
+        do {
+            $respuesta = $this->cliente->listar(
+                $this->coleccion,
+                $token,
+                $filtros + ['page' => $pagina, 'perPage' => 200]
+            );
+            $todos = array_merge($todos, $respuesta['items'] ?? []);
+            $totalPaginas = (int) ($respuesta['totalPages'] ?? 1);
+            $pagina++;
+        } while ($pagina <= $totalPaginas);
+
+        return $todos;
     }
 
     /**

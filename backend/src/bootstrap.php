@@ -7,6 +7,12 @@ use App\Http\RespuestaHttp;
 use App\Logica\ValidacionException;
 
 /**
+ * Zona horaria por defecto del backend. Sin esto PHP usa la de php.ini
+ * (normalmente UTC) y date()/new DateTime() devuelven fechas corridas.
+ */
+date_default_timezone_set('America/Montevideo');
+
+/**
  * Autoloader propio (PSR-4 simplificado): App\Data\Foo -> src/Data/Foo.php
  */
 spl_autoload_register(function (string $clase): void {

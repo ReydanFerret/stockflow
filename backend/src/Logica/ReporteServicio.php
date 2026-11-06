@@ -13,14 +13,14 @@ class ReporteServicio
     }
 
     /**
-     * Lista el historial de reportes generados (sin filtros ni orden
-     * particular: el frontend los muestra tal como vienen).
+     * Lista el historial de reportes generados, del más reciente al
+     * más antiguo (por momento de creación).
      *
      * @throws \App\Data\PocketBaseException
      */
     public function listar(string $token): array
     {
-        return $this->repositorio->listar($token, []);
+        return $this->repositorio->listar($token, ['sort' => '-created']);
     }
 
     /**
