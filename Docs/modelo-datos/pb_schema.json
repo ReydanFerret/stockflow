@@ -592,7 +592,7 @@
       {
         "hidden": false,
         "id": "autodate3342387181",
-        "name": "autodate",
+        "name": "created",
         "onCreate": true,
         "onUpdate": false,
         "presentable": false,
@@ -602,7 +602,7 @@
       {
         "hidden": false,
         "id": "autodate3299416079",
-        "name": "autodate2",
+        "name": "updated",
         "onCreate": false,
         "onUpdate": true,
         "presentable": false,
@@ -722,7 +722,7 @@
       {
         "hidden": false,
         "id": "autodate3342387181",
-        "name": "autodate",
+        "name": "created",
         "onCreate": true,
         "onUpdate": false,
         "presentable": false,
@@ -732,7 +732,7 @@
       {
         "hidden": false,
         "id": "autodate3299416079",
-        "name": "autodate2",
+        "name": "updated",
         "onCreate": false,
         "onUpdate": true,
         "presentable": false,
