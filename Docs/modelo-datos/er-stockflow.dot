@@ -1,0 +1,49 @@
+digraph ER {
+  rankdir=LR; splines=true; nodesep=0.7; ranksep=1.3;
+  fontname="Helvetica"; bgcolor="white";
+  node [shape=plain, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10, arrowhead=none, arrowtail=none];
+
+  usuarios [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+   <TR><TD BGCOLOR="#1f4e8c"><FONT COLOR="white"><B>usuarios</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> id</TD></TR>
+   <TR><TD ALIGN="LEFT"><U>cedula</U> (UNIQUE)</TD></TR>
+   <TR><TD ALIGN="LEFT">email (UNIQUE)</TD></TR>
+   <TR><TD ALIGN="LEFT">nombre</TD></TR><TR><TD ALIGN="LEFT">apellido</TD></TR>
+   <TR><TD ALIGN="LEFT">telefono</TD></TR><TR><TD ALIGN="LEFT">estado</TD></TR>
+   <TR><TD ALIGN="LEFT">rol</TD></TR><TR><TD ALIGN="LEFT">password_hash</TD></TR></TABLE>>];
+
+  productos [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+   <TR><TD BGCOLOR="#1f4e8c"><FONT COLOR="white"><B>productos</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> id</TD></TR>
+   <TR><TD ALIGN="LEFT">nombre (UNIQUE)</TD></TR>
+   <TR><TD ALIGN="LEFT">precio</TD></TR><TR><TD ALIGN="LEFT">stock</TD></TR>
+   <TR><TD ALIGN="LEFT">imagen</TD></TR><TR><TD ALIGN="LEFT">descripcion</TD></TR>
+   <TR><TD ALIGN="LEFT">umbral_minimo</TD></TR></TABLE>>];
+
+  ventas [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+   <TR><TD BGCOLOR="#1f4e8c"><FONT COLOR="white"><B>ventas</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> id</TD></TR>
+   <TR><TD ALIGN="LEFT"><B>FK</B> usuario_id → usuarios.id</TD></TR>
+   <TR><TD ALIGN="LEFT"><B>FK</B> producto_id → productos.id</TD></TR>
+   <TR><TD ALIGN="LEFT">precio_unitario</TD></TR><TR><TD ALIGN="LEFT">cantidad</TD></TR>
+   <TR><TD ALIGN="LEFT">fecha</TD></TR><TR><TD ALIGN="LEFT">hora</TD></TR></TABLE>>];
+
+  gastos [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+   <TR><TD BGCOLOR="#1f4e8c"><FONT COLOR="white"><B>gastos</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> id</TD></TR>
+   <TR><TD ALIGN="LEFT"><B>FK</B> usuario_id → usuarios.id</TD></TR>
+   <TR><TD ALIGN="LEFT">categoria</TD></TR><TR><TD ALIGN="LEFT">concepto</TD></TR>
+   <TR><TD ALIGN="LEFT">metodo_pago</TD></TR><TR><TD ALIGN="LEFT">observacion</TD></TR>
+   <TR><TD ALIGN="LEFT">monto</TD></TR><TR><TD ALIGN="LEFT">fecha</TD></TR><TR><TD ALIGN="LEFT">hora</TD></TR></TABLE>>];
+
+  reportes [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+   <TR><TD BGCOLOR="#1f4e8c"><FONT COLOR="white"><B>reportes</B></FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><B>PK</B> id</TD></TR>
+   <TR><TD ALIGN="LEFT">tipo</TD></TR><TR><TD ALIGN="LEFT">fecha_inicio</TD></TR>
+   <TR><TD ALIGN="LEFT">fecha_fin</TD></TR><TR><TD ALIGN="LEFT">archivo</TD></TR></TABLE>>];
+
+  usuarios -> ventas   [label="realiza\n1 : N", arrowhead=crow, arrowtail=tee, dir=both, headlabel="", taillabel=""];
+  usuarios -> gastos   [label="registra\n1 : N", arrowhead=crow, arrowtail=tee, dir=both];
+  productos -> ventas  [label="se vende en\n1 : N", arrowhead=crow, arrowtail=tee, dir=both];
+}

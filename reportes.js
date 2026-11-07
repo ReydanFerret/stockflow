@@ -10,6 +10,58 @@ const ETIQUETAS_TIPO = {
     gastos: "Gastos",
 };
 
+const ZONA_HORARIA = "America/Montevideo";
+
+// PocketBase devuelve "2026-10-02 14:30:00.123Z" (con espacio);
+// se cambia por "T" para que new Date() lo interprete bien en todos los navegadores
+function parsearFechaPB(valor) {
+    if (!valor) return null;
+    const d = new Date(String(valor).replace(" ", "T"));
+    return isNaN(d.getTime()) ? null : d;
+}
+
+// Fecha + hora reales de creación, en hora de Montevideo
+function formatearCreado(valor) {
+    const d = parsearFechaPB(valor);
+    if (!d) return { fecha: null, hora: null };
+    return {
+        fecha: d.toLocaleDateString("es-UY", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            timeZone: ZONA_HORARIA,
+        }),
+        hora: d.toLocaleTimeString("es-UY", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+            timeZone: ZONA_HORARIA,
+        }),
+    };
+}
+
+// Más recientes primero
+function ordenarRecientesPrimero(lista) {
+    const marca = (x) => parsearFechaPB(x.created)?.getTime() || 0;
+    return [...lista].sort((a, b) => marca(b) - marca(a));
+}
+
+// Para campos de solo fecha (guardados a medianoche UTC)
+function formatearFecha(valor) {
+    if (!valor) return "-";
+
+    const fecha = parsearFechaPB(valor);
+    if (!fecha) return "-";
+
+    return fecha.toLocaleDateString("es-UY", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC", // evita que se corra un día por la zona horaria
+    });
+}
+
 function mostrarAlerta(mensaje, tipo) {
     const contenedor = document.getElementById("contenedorAlertas");
     if (contenedor) {
@@ -39,19 +91,23 @@ async function cargarHistorialReportes() {
         tbody.innerHTML = "";
 
         if (datos.reportes.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center">Todavía no generaste ningún reporte.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center">Todavía no generaste ningún reporte.</td></tr>`;
             return;
         }
 
-        datos.reportes.forEach((r) => {
+        ordenarRecientesPrimero(datos.reportes).forEach((r) => {
             const fila = document.createElement("tr");
+            const creado = formatearCreado(r.created);
+            const generado = creado.fecha ? `${creado.fecha} ${creado.hora}` : "-";
+
             const enlace = r.archivo
                 ? `<a href="${API_BASE}/reporte-archivo.php?id=${r.id}" target="_blank" rel="noopener">Descargar PDF</a>`
                 : "Sin archivo";
 
             fila.innerHTML = `
-                <td>${r.fecha_inicio || "-"}</td>
-                <td>${r.fecha_fin || "-"}</td>
+                <td>${generado}</td>
+                <td>${formatearFecha(r.fecha_inicio)}</td>
+                <td>${formatearFecha(r.fecha_fin)}</td>
                 <td>${ETIQUETAS_TIPO[r.tipo] || r.tipo}</td>
                 <td>${enlace}</td>
             `;
@@ -104,13 +160,14 @@ async function generarReporte() {
             const datos = await apiFetch(`/ventas.php?desde=${desde}&hasta=${hasta}`);
             titulo = `Reporte de Ventas (${desde} a ${hasta})`;
             columnas = ["Producto", "Fecha", "Hora", "Cantidad", "Precio unitario", "Total"];
-            filas = datos.ventas.map((v) => {
+            filas = ordenarRecientesPrimero(datos.ventas).map((v) => {
                 const cantidad = Number(v.cantidad) || 0;
                 const precioUnitario = Number(v.precio_unitario) || 0;
+                const creado = formatearCreado(v.created);
                 return [
                     v.producto_nombre || "Sin producto",
-                    v.fecha || "-",
-                    v.hora || "-",
+                    creado.fecha || formatearFecha(v.fecha),
+                    creado.hora || v.hora || "-",
                     cantidad,
                     `$${precioUnitario.toFixed(2)}`,
                     `$${(cantidad * precioUnitario).toFixed(2)}`,
@@ -120,8 +177,8 @@ async function generarReporte() {
             const datos = await apiFetch(`/gastos.php?desde=${desde}&hasta=${hasta}`);
             titulo = `Reporte de Gastos (${desde} a ${hasta})`;
             columnas = ["Fecha", "Concepto", "Categoría", "Método de pago", "Monto", "Observaciones"];
-            filas = datos.gastos.map((g) => [
-                g.fecha || "-",
+            filas = ordenarRecientesPrimero(datos.gastos).map((g) => [
+                formatearFecha(g.fecha),
                 g.concepto || "-",
                 g.categoria || "-",
                 g.metodo_pago || "-",

@@ -1,0 +1,18 @@
+services:
+  pocketbase:
+    build: ./pocketbase
+    container_name: stockflow-pocketbase
+    restart: always
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - ./pb_data:/pb/pb_data
+
+  backend:
+    build: ./backend
+    container_name: stockflow-backend
+    restart: always
+    depends_on:
+      - pocketbase
+    ports:
+      - "127.0.0.1:8000:8000"
